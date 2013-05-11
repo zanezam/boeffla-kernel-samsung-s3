@@ -1,0 +1,21 @@
+#!/system/bin/sh
+#System Tweaks
+#Requires reboot!!! Tweak various system settings:
+#Off (default stock)
+
+# Display dialog window
+
+if [ ! -f /system/etc/init.d/*bksystemtweak_001-off_default ]; then
+
+	rm /sdcard/boeffla_twk_dlg_helper
+
+	am start -a android.intent.action.MAIN -e message "System tweaks will be changed after next reboot!!!" -e title "System Tweaks" -e okstyle "Ok" -n bo.boeffla.tweaks.dialog.helper/.BoefflaTweaksDialogActivity
+
+	while [ ! -f /sdcard/boeffla_twk_dlg_helper ]
+	do
+		/sbin/busybox sleep 1
+	done
+
+	rm /sdcard/boeffla_twk_dlg_helper
+
+fi

@@ -1,0 +1,6 @@
+#!/system/bin/sh
+#USB Charge Rate
+#Set charging rate when connected to USB
+#0 mA (disable loading)
+
+echo "0" >> /sys/kernel/charge_levels/charge_level_usb

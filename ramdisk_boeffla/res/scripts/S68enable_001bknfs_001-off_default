@@ -1,0 +1,9 @@
+#!/system/bin/sh
+#NFS support
+#NFS network protocol support:
+#Off (default)
+
+rmmod /lib/modules/nfs.ko
+rmmod /lib/modules/lockd.ko
+rmmod /lib/modules/auth_rpcgss.ko
+rmmod /lib/modules/sunrpc.ko

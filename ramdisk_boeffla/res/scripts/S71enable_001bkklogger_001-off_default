@@ -1,0 +1,6 @@
+#!/system/bin/sh
+#Kernel Logger
+#Enable or disable Linux kernel logger:
+#Off (default)
+
+echo "0" > /sys/kernel/printk_mode/printk_mode

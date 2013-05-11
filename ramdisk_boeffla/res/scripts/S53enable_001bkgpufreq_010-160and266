@@ -1,0 +1,6 @@
+#!/system/bin/sh
+#GPU Frequencies
+#Change GPU clock speeds:
+#160/266
+
+echo "160 160 266 266" > /sys/class/misc/gpu_clock_control/gpu_control

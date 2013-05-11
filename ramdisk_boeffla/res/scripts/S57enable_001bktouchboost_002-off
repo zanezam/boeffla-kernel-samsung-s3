@@ -1,0 +1,6 @@
+#!/system/bin/sh
+#Touch boost
+#Switch touch screen booster on or off
+#Off
+
+echo "0" > /sys/class/misc/touchboost_switch/touchboost_switch

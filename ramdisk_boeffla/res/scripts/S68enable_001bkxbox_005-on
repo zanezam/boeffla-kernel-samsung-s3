@@ -1,0 +1,6 @@
+#!/system/bin/sh
+#XBox support
+#XBox controller support
+#On
+
+insmod /lib/modules/xpad.ko

@@ -1,0 +1,6 @@
+#!/system/bin/sh
+#Sharpness Fix
+#Hardcore's speedmod sharpness fix:
+#Off (default)
+
+echo "0" > /sys/class/misc/mdnie_preset/mdnie_preset

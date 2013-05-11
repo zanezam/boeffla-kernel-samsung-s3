@@ -1,0 +1,9 @@
+#!/system/bin/sh
+#NFS support
+#NFS network protocol support:
+#On
+
+insmod /lib/modules/sunrpc.ko
+insmod /lib/modules/auth_rpcgss.ko
+insmod /lib/modules/lockd.ko
+insmod /lib/modules/nfs.ko

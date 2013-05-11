@@ -1,0 +1,54 @@
+#!/system/bin/sh
+#Profile: Power
+#Load power profile settings
+
+TITLE="Load power profile"
+STYLE="Ok"
+
+# define profile scripts
+GOVERNOR="*bkgov*zzmoove_perf"
+SCHEDULERINT="*bkschedint*row"
+SCHEDULEREXT="*bkschedext*row"
+CPUFREQ="*bkcpufreq*1500"
+CPUUV="leave-this-setting-on-default"
+GPUFREQ="*bkgpufreq*266to533"
+GPUUV="leave-this-setting-on-default"
+
+# define default scripts
+GOVERNOR_DEFAULT="*bkgov*pegasusq_default"
+SCHEDULERINT_DEFAULT="*bkschedint*cfq_default"
+SCHEDULEREXT_DEFAULT="*bkschedext*cfq_default"
+CPUFREQ_DEFAULT="*bkcpufreq*1400_default"
+CPUUV_DEFAULT="*bkcpuuv*off_default"
+GPUFREQ_DEFAULT="*bkgpufreq*160to440_default"
+GPUUV_DEFAULT="*bkgpuuv*off_default"
+
+# Ask for confirmation
+rm /sdcard/boeffla_twk_dlg_helper
+am start -a android.intent.action.MAIN -e message "Do you really want to apply this profile?" -e title "$TITLE" -e button1 "Yes" -e button2 "No" -e toasty "Applying profile now!" -e toastn "Applying profile aborted!" -n bo.boeffla.tweaks.dialog.helper/.BoefflaTweaksDialogActivity
+
+while [ ! -f /sdcard/boeffla_twk_dlg_helper ]
+do
+  /sbin/busybox sleep 1
+done
+
+RESULT=`cat /sdcard/boeffla_twk_dlg_helper`
+
+if [ "$RESULT" = "yes" ]; then
+
+	# Load profile
+	. /res/scripts/tests/loadprofile.inc
+
+	# Display confirmation window
+	rm /sdcard/boeffla_twk_dlg_helper
+
+	am start -a android.intent.action.MAIN -e message "Your profile has been loaded." -e title "$TITLE" -e okstyle "$STYLE" -n bo.boeffla.tweaks.dialog.helper/.BoefflaTweaksDialogActivity
+
+	while [ ! -f /sdcard/boeffla_twk_dlg_helper ]
+	do
+	  /sbin/busybox sleep 1
+	done
+
+fi
+
+rm /sdcard/boeffla_twk_dlg_helper

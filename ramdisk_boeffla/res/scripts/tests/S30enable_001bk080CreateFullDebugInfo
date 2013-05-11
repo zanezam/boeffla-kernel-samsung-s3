@@ -1,0 +1,275 @@
+#!/system/bin/sh
+#Debug: Create full debug info file
+#Creates a file boeffla-debug.txt on your sdcard, send it to support@boeffla-kernel.de.
+
+TITLE="Debug: Create full debug info file"
+STYLE="Ok"
+
+LOGFILE="/sdcard/boeffla-kernel-data/boeffla-debug-$(date +%d.%m.%Y-%H.%M.%S).txt"
+
+
+if [ -f /sdcard/boeffla_twk_dlg_helper ]; then
+  rm /sdcard/boeffla_twk_dlg_helper
+fi;
+
+echo $(date) Full debug log file start > $LOGFILE
+echo "\n============================================\n" >> $LOGFILE
+
+echo "\n**** Boeffla-Kernel version\n" >> $LOGFILE
+cat /proc/version >> $LOGFILE
+
+echo "\n**** Firmware information\n" >> $LOGFILE
+/sbin/busybox grep ro.build.version /system/build.prop >> $LOGFILE
+
+echo "\n============================================\n" >> $LOGFILE
+
+echo "\n**** Boeffla-Kernel config\n" >> $LOGFILE
+cat /sdcard/boeffla-kernel/boeffla-kernel.conf  >> $LOGFILE
+
+echo "\n**** Boeffla-Kernel log\n" >> $LOGFILE
+cat /sdcard/boeffla-kernel-data/boeffla-kernel.log >> $LOGFILE
+
+echo "\n**** Boeffla-Kernel log 1\n" >> $LOGFILE
+cat /sdcard/boeffla-kernel-data/boeffla-kernel.log.1 >> $LOGFILE
+
+echo "\n**** Boeffla-Kernel log 2\n" >> $LOGFILE
+cat /sdcard/boeffla-kernel-data/boeffla-kernel.log.2 >> $LOGFILE
+
+echo "\n**** Boeffla-Kernel log 3\n" >> $LOGFILE
+cat /sdcard/boeffla-kernel-data/boeffla-kernel.log.3 >> $LOGFILE
+
+echo "\n============================================\n" >> $LOGFILE
+
+echo "\n**** boeffla_sound\n" >> $LOGFILE
+cat /sys/class/misc/boeffla_sound/boeffla_sound >> $LOGFILE
+
+echo "\n**** headphone_volume\n" >> $LOGFILE
+cat /sys/class/misc/boeffla_sound/headphone_volume >> $LOGFILE
+
+echo "\n**** speaker_volume\n" >> $LOGFILE
+cat /sys/class/misc/boeffla_sound/speaker_volume >> $LOGFILE
+
+echo "\n**** speaker_tuning\n" >> $LOGFILE
+cat /sys/class/misc/boeffla_sound/speaker_tuning >> $LOGFILE
+
+echo "\n**** privacy_mode\n" >> $LOGFILE
+cat /sys/class/misc/boeffla_sound/privacy_mode >> $LOGFILE
+
+echo "\n**** equalizer\n" >> $LOGFILE
+cat /sys/class/misc/boeffla_sound/eq >> $LOGFILE
+
+echo "\n**** eq_gains\n" >> $LOGFILE
+cat /sys/class/misc/boeffla_sound/eq_gains >> $LOGFILE
+
+echo "\n**** eq_gains_alt\n" >> $LOGFILE
+cat /sys/class/misc/boeffla_sound/eq_gains_alt >> $LOGFILE
+
+echo "\n**** eq_bands\n" >> $LOGFILE
+cat /sys/class/misc/boeffla_sound/eq_bands >> $LOGFILE
+
+echo "\n**** dac_direct\n" >> $LOGFILE
+cat /sys/class/misc/boeffla_sound/dac_direct >> $LOGFILE
+
+echo "\n**** dac_oversampling\n" >> $LOGFILE
+cat /sys/class/misc/boeffla_sound/dac_oversampling >> $LOGFILE
+
+echo "\n**** fll_tuning\n" >> $LOGFILE
+cat /sys/class/misc/boeffla_sound/fll_tuning >> $LOGFILE
+
+echo "\n**** stereo_expansion\n" >> $LOGFILE
+cat /sys/class/misc/boeffla_sound/stereo_expansion >> $LOGFILE
+
+echo "\n**** mono_downmix\n" >> $LOGFILE
+cat /sys/class/misc/boeffla_sound/mono_downmix >> $LOGFILE
+
+echo "\n**** mic_level_general\n" >> $LOGFILE
+cat /sys/class/misc/boeffla_sound/mic_level_general >> $LOGFILE
+
+echo "\n**** mic_level_call\n" >> $LOGFILE
+cat /sys/class/misc/boeffla_sound/mic_level_call >> $LOGFILE
+
+echo "\n**** debug_level\n" >> $LOGFILE
+cat /sys/class/misc/boeffla_sound/debug_level >> $LOGFILE
+
+echo "\n**** debug_info\n" >> $LOGFILE
+cat /sys/class/misc/boeffla_sound/debug_info >> $LOGFILE
+
+echo "\n**** version\n" >> $LOGFILE
+cat /sys/class/misc/boeffla_sound/version >> $LOGFILE
+
+echo "\n============================================\n" >> $LOGFILE
+
+echo "\n**** Loaded modules:\n" >> $LOGFILE
+lsmod >> $LOGFILE
+
+echo "\n**** Max CPU frequency:\n" >> $LOGFILE
+cat /sys/devices/system/cpu/cpu0/cpufreq/scaling_max_freq >> $LOGFILE
+
+echo "\n**** CPU undervolting:\n" >> $LOGFILE
+cat /sys/devices/system/cpu/cpu0/cpufreq/UV_mV_table >> $LOGFILE
+
+echo "\n**** GPU frequencies:\n" >> $LOGFILE
+cat /sys/class/misc/gpu_clock_control/gpu_control >> $LOGFILE
+
+echo "\n**** GPU undervolting:\n" >> $LOGFILE
+cat /sys/class/misc/gpu_voltage_control/gpu_control >> $LOGFILE
+
+echo "\n**** Root:\n" >> $LOGFILE
+ls /system/xbin/su >> $LOGFILE
+ls /system/app/Superuser.apk >> $LOGFILE
+
+echo "\n**** Mounts:\n" >> $LOGFILE
+mount | /sbin/busybox grep /data >> $LOGFILE
+mount | /sbin/busybox grep /cache >> $LOGFILE
+
+echo "\n**** SD Card read ahead:\n" >> $LOGFILE
+cat /sys/block/mmcblk0/bdi/read_ahead_kb >> $LOGFILE
+cat /sys/block/mmcblk1/bdi/read_ahead_kb >> $LOGFILE
+
+echo "\n**** System tweaks (swappiness/vfs_cache_pressure/dirty_background_ratio/dirty_ratio/drop_caches:\n" >> $LOGFILE
+cat /proc/sys/vm/swappiness >> $LOGFILE
+cat /proc/sys/vm/vfs_cache_pressure >> $LOGFILE
+cat /proc/sys/vm/dirty_background_ratio >> $LOGFILE
+cat /proc/sys/vm/dirty_ratio >> $LOGFILE
+cat /proc/sys/vm/drop_caches >> $LOGFILE
+
+echo "\n**** Touch boost switch:\n" >> $LOGFILE
+cat /sys/class/misc/touchboost_switch/touchboost_switch >> $LOGFILE
+
+echo "\n**** Charging levels (ac/usb):\n" >> $LOGFILE
+cat /sys/kernel/charge_levels/charge_level_ac >> $LOGFILE
+cat /sys/kernel/charge_levels/charge_level_usb >> $LOGFILE
+
+echo "\n**** Governor:\n" >> $LOGFILE
+cat /sys/devices/system/cpu/cpu0/cpufreq/scaling_governor >> $LOGFILE
+
+echo "\n**** Scheduler:\n" >> $LOGFILE
+cat /sys/block/mmcblk0/queue/scheduler >> $LOGFILE
+cat /sys/block/mmcblk1/queue/scheduler >> $LOGFILE
+
+echo "\n**** Kernel Logger:\n" >> $LOGFILE
+cat /sys/kernel/printk_mode/printk_mode >> $LOGFILE
+
+echo "\n**** Android Logger:\n" >> $LOGFILE
+cat /sys/kernel/logger_mode/logger_mode >> $LOGFILE
+
+echo "\n**** Sharpness fix:\n" >> $LOGFILE
+cat /sys/class/misc/mdnie_preset/mdnie_preset >> $LOGFILE
+
+echo "\n**** LED fading:\n" >> $LOGFILE
+cat /sys/class/sec/led/led_fade >> $LOGFILE
+
+echo "\n**** LED intensity:\n" >> $LOGFILE
+cat /sys/class/sec/led/led_intensity >> $LOGFILE
+
+echo "\n**** LED speed:\n" >> $LOGFILE
+cat /sys/class/sec/led/led_speed >> $LOGFILE
+
+echo "\n**** LED slope:\n" >> $LOGFILE
+cat /sys/class/sec/led/led_slope >> $LOGFILE
+
+echo "\n============================================\n" >> $LOGFILE
+
+echo "\n**** /data/app folder\n" >> $LOGFILE
+ls -l /data/app >> $LOGFILE
+
+echo "\n**** /system/app folder\n" >> $LOGFILE
+ls -l /system/app >> $LOGFILE
+
+echo "\n============================================\n" >> $LOGFILE
+
+echo "\n**** Uptime:\n" >> $LOGFILE
+cat /proc/uptime >> $LOGFILE
+
+echo "\n**** Frequency usage table:\n" >> $LOGFILE
+cat /sys/devices/system/cpu/cpu0/cpufreq/stats/time_in_state >> $LOGFILE
+
+echo "\n**** Memory:\n" >> $LOGFILE
+/sbin/busybox free -m >> $LOGFILE
+
+echo "\n**** Swap:\n" >> $LOGFILE
+cat /proc/swaps >> $LOGFILE
+
+echo "\n**** Storage:\n" >> $LOGFILE
+/sbin/busybox df >> $LOGFILE
+
+echo "\n**** Mounts:\n" >> $LOGFILE
+/sbin/busybox mount >> $LOGFILE
+
+echo "\n**** /system/etc/init.d folder\n" >> $LOGFILE
+ls -l /system/etc/init.d >> $LOGFILE
+
+echo "\n**** /etc/init.d folder\n" >> $LOGFILE
+ls -l /etc/init.d >> $LOGFILE
+
+echo "\n**** /data/init.d folder\n" >> $LOGFILE
+ls -l /data/init.d >> $LOGFILE
+
+echo "\n**** pegasusq tuneables\n" >> $LOGFILE
+cat /sys/devices/system/cpu/cpufreq/pegasusq/hotplug_freq_1_1 >> $LOGFILE
+cat /sys/devices/system/cpu/cpufreq/pegasusq/hotplug_freq_2_0 >> $LOGFILE
+cat /sys/devices/system/cpu/cpufreq/pegasusq/hotplug_rq_1_1 >> $LOGFILE
+cat /sys/devices/system/cpu/cpufreq/pegasusq/hotplug_rq_2_0 >> $LOGFILE
+cat /sys/devices/system/cpu/cpufreq/pegasusq/hotplug_freq_2_1 >> $LOGFILE
+cat /sys/devices/system/cpu/cpufreq/pegasusq/hotplug_freq_3_0 >> $LOGFILE
+cat /sys/devices/system/cpu/cpufreq/pegasusq/hotplug_rq_2_1 >> $LOGFILE
+cat /sys/devices/system/cpu/cpufreq/pegasusq/hotplug_rq_3_0 >> $LOGFILE
+cat /sys/devices/system/cpu/cpufreq/pegasusq/hotplug_freq_3_1 >> $LOGFILE
+cat /sys/devices/system/cpu/cpufreq/pegasusq/hotplug_freq_4_0 >> $LOGFILE
+cat /sys/devices/system/cpu/cpufreq/pegasusq/hotplug_rq_3_1 >> $LOGFILE
+cat /sys/devices/system/cpu/cpufreq/pegasusq/hotplug_rq_4_0 >> $LOGFILE
+cat /sys/devices/system/cpu/cpufreq/pegasusq/cpu_down_rate >> $LOGFILE
+cat /sys/devices/system/cpu/cpufreq/pegasusq/cpu_up_rate >> $LOGFILE
+cat /sys/devices/system/cpu/cpufreq/pegasusq/up_threshold >> $LOGFILE
+cat /sys/devices/system/cpu/cpufreq/pegasusq/freq_step >> $LOGFILE
+
+echo "\n**** zzmoove tuneables\n" >> $LOGFILE
+cat /sys/devices/system/cpu/cpufreq/zzmoove/sampling_rate >> $LOGFILE
+cat /sys/devices/system/cpu/cpufreq/zzmoove/sampling_down_factor >> $LOGFILE
+cat /sys/devices/system/cpu/cpufreq/zzmoove/up_threshold >> $LOGFILE
+cat /sys/devices/system/cpu/cpufreq/zzmoove/up_threshold_hotplug1 >> $LOGFILE
+cat /sys/devices/system/cpu/cpufreq/zzmoove/up_threshold_hotplug2 >> $LOGFILE
+cat /sys/devices/system/cpu/cpufreq/zzmoove/up_threshold_hotplug3 >> $LOGFILE
+cat /sys/devices/system/cpu/cpufreq/zzmoove/down_threshold >> $LOGFILE
+cat /sys/devices/system/cpu/cpufreq/zzmoove/down_threshold_hotplug1 >> $LOGFILE
+cat /sys/devices/system/cpu/cpufreq/zzmoove/down_threshold_hotplug2 >> $LOGFILE
+cat /sys/devices/system/cpu/cpufreq/zzmoove/down_threshold_hotplug3 >> $LOGFILE
+cat /sys/devices/system/cpu/cpufreq/zzmoove/ignore_nice_load >> $LOGFILE
+cat /sys/devices/system/cpu/cpufreq/zzmoove/freq_step >> $LOGFILE
+cat /sys/devices/system/cpu/cpufreq/zzmoove/smooth_up >> $LOGFILE
+cat /sys/devices/system/cpu/cpufreq/zzmoove/sampling_rate_sleep_multiplier >> $LOGFILE
+cat /sys/devices/system/cpu/cpufreq/zzmoove/down_threshold_sleep >> $LOGFILE
+cat /sys/devices/system/cpu/cpufreq/zzmoove/up_threshold_sleep >> $LOGFILE
+cat /sys/devices/system/cpu/cpufreq/zzmoove/smooth_up_sleep >> $LOGFILE
+cat /sys/devices/system/cpu/cpufreq/zzmoove/hotplug_sleep >> $LOGFILE
+
+echo "\n**** last_kmsg\n" >> $LOGFILE
+cat /proc/last_kmsg  >> $LOGFILE
+
+echo "\n**** dmesg\n" >> $LOGFILE
+dmesg  >> $LOGFILE
+
+echo "\n============================================\n" >> $LOGFILE
+echo $(date) Full debug log file end >> $LOGFILE
+
+if [ -f $LOGFILE ]; then
+
+	am start -a android.intent.action.MAIN -e message "$LOGFILE created! please send it to support@boeffla-kernel.de" -e title "$TITLE" -e okstyle "$STYLE" -n bo.boeffla.tweaks.dialog.helper/.BoefflaTweaksDialogActivity
+
+	while [ ! -f /sdcard/boeffla_twk_dlg_helper ]
+	do
+	  /sbin/busybox sleep 1
+	done
+else
+	am start -a android.intent.action.MAIN -e message "Failure!! $LOGFILE not found!! Something went wrong, please contact the developer." -e title "$TITLE" -e okstyle "$STYLE" -n bo.boeffla.tweaks.dialog.helper/.BoefflaTweaksDialogActivity
+
+	while [ ! -f /sdcard/boeffla_twk_dlg_helper ]
+	do
+	  /sbin/busybox sleep 1
+	done
+
+fi;
+
+if [ -f /sdcard/boeffla_twk_dlg_helper ]; then
+  rm /sdcard/boeffla_twk_dlg_helper
+fi

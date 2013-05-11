@@ -1,0 +1,23 @@
+#!/system/bin/sh
+#GPU Frequencies
+#Change GPU clock speeds:
+#440/533/600/700
+
+echo "440 533 600 700" > /sys/class/misc/gpu_clock_control/gpu_control
+
+# Display dialog window
+
+if [ ! -f /system/etc/init.d/*bkgpufreq_075-440to700 ]; then
+
+	rm /sdcard/boeffla_twk_dlg_helper
+
+	am start -a android.intent.action.MAIN -e message "You are overclocking your GPU, so you should consider some slight GPU overvolting (in GPU undervolting section) for stability." -e title "GPU Frequency warning" -e okstyle "Ok" -n bo.boeffla.tweaks.dialog.helper/.BoefflaTweaksDialogActivity
+
+	while [ ! -f /sdcard/boeffla_twk_dlg_helper ]
+	do
+		/sbin/busybox sleep 1
+	done
+
+	rm /sdcard/boeffla_twk_dlg_helper
+
+fi

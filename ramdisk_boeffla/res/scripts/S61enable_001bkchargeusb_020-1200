@@ -1,0 +1,6 @@
+#!/system/bin/sh
+#USB Charge Rate
+#Set charging rate when connected to USB
+#1200 mA (your own risk)
+
+echo "1200" >> /sys/kernel/charge_levels/charge_level_usb

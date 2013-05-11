@@ -1,0 +1,36 @@
+#!/system/bin/sh
+#Config: Create boeffla-kernel folder
+#Creates an empty boeffla-kernel folder on your sdcard
+
+TITLE="Config: Create boeffla-kernel folder"
+STYLE="Ok"
+
+if [ -f /sdcard/boeffla_twk_dlg_helper ]; then
+  rm /sdcard/boeffla_twk_dlg_helper
+fi;
+
+am start -a android.intent.action.MAIN -e message "Do you really want to create a boeffla-kernel folder?" -e title "$TITLE" -e button1 "Yes" -e button2 "No" -e toasty "Create boeffla-kernel folder now!" -e toastn "Create of boeffla-kernel folder aborted!" -n bo.boeffla.tweaks.dialog.helper/.BoefflaTweaksDialogActivity
+
+while [ ! -f /sdcard/boeffla_twk_dlg_helper ]
+do
+  /sbin/busybox sleep 1
+done
+
+RESULT=`cat /sdcard/boeffla_twk_dlg_helper`
+
+if [ "$RESULT" = "yes" ]; then
+
+  if [ -f /sdcard/boeffla_twk_dlg_helper ]; then
+    rm /sdcard/boeffla_twk_dlg_helper
+  fi;
+
+  /sbin/busybox mkdir /sdcard/boeffla-kernel
+
+am start -a android.intent.action.MAIN -e message "boeffla-kernel folder created! Now restart to get a fresh configuration file." -e title "$TITLE" -e okstyle "$STYLE" -n bo.boeffla.tweaks.dialog.helper/.BoefflaTweaksDialogActivity
+
+else
+  if [ -f /sdcard/boeffla_twk_dlg_helper ]; then
+    rm /sdcard/boeffla_twk_dlg_helper
+  fi;
+  exit 0
+fi;

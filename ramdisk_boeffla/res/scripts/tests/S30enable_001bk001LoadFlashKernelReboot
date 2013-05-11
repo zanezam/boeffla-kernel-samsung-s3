@@ -1,0 +1,92 @@
+#!/system/bin/sh
+#Flash: Load and flash kernel (CAUTION!!!)
+#Load either last stable or test kernel and flash. Device will reboot.
+
+TITLE="Flash: Load and flash kernel (CAUTION!!!)"
+STYLE="Ok"
+
+WORKPATH="/sdcard/boeffla-kernel-data"
+
+# Ask whether last stable or test kernels should be loaded
+
+rm /sdcard/boeffla_twk_dlg_helper
+
+am start -a android.intent.action.MAIN -e message "Which kernel version do you want to flash?" -e title "$TITLE" -e button1 "Stable" -e button2 "Test" -e toastn "Test kernel selected !!!" -n bo.boeffla.tweaks.dialog.helper/.BoefflaTweaksDialogActivity
+
+while [ ! -f /sdcard/boeffla_twk_dlg_helper ]
+do
+  /sbin/busybox sleep 1
+done
+
+RESULT=`/sbin/busybox cat /sdcard/boeffla_twk_dlg_helper`
+
+rm /sdcard/boeffla_twk_dlg_helper
+
+if [ "$RESULT" = "yes" ]; then
+  HTTPPATH="http://download.boeffla-kernel.de/stable"
+else
+  HTTPPATH="http://download.boeffla-kernel.de/test"
+fi
+
+
+# Ask user for confirmation before flash
+
+rm /sdcard/boeffla_twk_dlg_helper
+
+am start -a android.intent.action.MAIN -e message "Are you sure you want to load and flash now?" -e title "$TITLE" -e button1 "Yes" -e button2 "No" -e toastn "Kernel flash aborted!" -n bo.boeffla.tweaks.dialog.helper/.BoefflaTweaksDialogActivity
+
+while [ ! -f /sdcard/boeffla_twk_dlg_helper ]
+do
+  /sbin/busybox sleep 1
+done
+
+RESULT=`/sbin/busybox cat /sdcard/boeffla_twk_dlg_helper`
+
+rm /sdcard/boeffla_twk_dlg_helper
+
+if [ "$RESULT" = "yes" ]; then
+
+  # delete old boot.img and checksum file and load from network
+  /sbin/busybox rm $WORKPATH/boot.img
+  /sbin/busybox rm $WORKPATH/checksum
+
+  /sbin/busybox wget $HTTPPATH/boot.img -O $WORKPATH/boot.img
+  /sbin/busybox wget $HTTPPATH/checksum -O $WORKPATH/checksum
+
+  # verify checksum
+  T1=`/sbin/busybox md5sum $WORKPATH/boot.img`
+  T2=`/sbin/busybox cat $WORKPATH/checksum`
+
+  T1=${T1:0:32}
+  T2=${T2:0:32}
+
+  # flash and reboot if checksum verification is ok
+  if [ "$T1" = "$T2" ] && [ -f $WORKPATH/boot.img ] && [ -f $WORKPATH/checksum ]; then
+
+	/sbin/busybox rm $WORKPATH/checksum
+
+	/sbin/busybox dd if=$WORKPATH/boot.img of=/dev/block/mmcblk0p5
+	/sbin/busybox sync
+	/sbin/busybox sleep 2s
+
+	/system/bin/reboot
+
+  else
+
+	/sbin/busybox rm $WORKPATH/boot.img
+	/sbin/busybox rm $WORKPATH/checksum
+
+	rm /sdcard/boeffla_twk_dlg_helper
+
+	am start -a android.intent.action.MAIN -e message "Download or checksum incorrect! Something went wrong, aborting now!" -e title "$TITLE" -e okstyle "$STYLE" -n bo.boeffla.tweaks.dialog.helper/.BoefflaTweaksDialogActivity
+
+	while [ ! -f /sdcard/boeffla_twk_dlg_helper ]
+	do
+	  /sbin/busybox sleep 1
+	done
+
+	rm /sdcard/boeffla_twk_dlg_helper
+
+  fi
+
+fi

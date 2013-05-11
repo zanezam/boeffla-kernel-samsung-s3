@@ -1,0 +1,6 @@
+#!/system/bin/sh
+#GPU Undervolting
+#Change GPU voltage:
+#heavy
+
+echo "825000 850000 900000 950000" > /sys/class/misc/gpu_voltage_control/gpu_control

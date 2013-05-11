@@ -1,0 +1,6 @@
+#!/system/bin/sh
+#AC Charge Rate
+#Set charging rate when ac charger plugged in
+#700 mA
+
+echo "700" >> /sys/kernel/charge_levels/charge_level_ac

@@ -1,0 +1,59 @@
+#!/system/bin/sh
+#Flash: Flash kernel from sdcard (CAUTION!!!)
+#Put the kernel tar.md5 file in your /sdcard directory first! (only one file allowed!). Device will reboot.
+
+TITLE="Flash: Flash kernel from sdcard (CAUTION!!!)"
+STYLE="Ok"
+
+if [ -f /sdcard/boeffla_twk_dlg_helper ]; then
+  rm /sdcard/boeffla_twk_dlg_helper
+fi;
+
+am start -a android.intent.action.MAIN -e message "Do you want to flash new boeffla kernel image now? The downloaded image has to be on /sdcard!" -e title "$TITLE" -e button1 "Yes" -e button2 "No" -e toastn "Kernel flash aborted!" -n bo.boeffla.tweaks.dialog.helper/.BoefflaTweaksDialogActivity
+
+while [ ! -f /sdcard/boeffla_twk_dlg_helper ]
+do
+  /sbin/busybox sleep 1
+done
+
+RESULT=`cat /sdcard/boeffla_twk_dlg_helper`
+
+if [ "$RESULT" = "yes" ]; then
+
+  if [ -f /sdcard/boeffla_twk_dlg_helper ]; then
+    rm /sdcard/boeffla_twk_dlg_helper
+  fi;
+
+  # delete old boot.img and extract from current tar archive
+  /sbin/busybox rm /sdcard/boot.img
+  /sbin/busybox tar -xvf /sdcard/boeffla-kernel-*.tar.md5 -C /sdcard
+
+  # if boeffla-kernel string is contained at the end of the file, proceed with flashing
+  # (assuming, the file has been loaded completely if this string exists)
+  if [ "`/sbin/busybox grep '  boeffla-kernel' /sdcard/boeffla-kernel-*.tar.md5`" ]; then
+	if [ -f /sdcard/boot.img ]; then
+		/sbin/busybox dd if=/sdcard/boot.img of=/dev/block/mmcblk0p5
+		/sbin/busybox rm /sdcard/boot.img
+		/sbin/busybox sync
+		/sbin/busybox sleep 2s
+		/system/bin/reboot
+	else
+
+	am start -a android.intent.action.MAIN -e message "boot.img on /sdcard not found! Something went wrong, aborting now!" -e title "$TITLE" -e okstyle "$STYLE" -n bo.boeffla.tweaks.dialog.helper/.BoefflaTweaksDialogActivity
+
+	while [ ! -f /sdcard/boeffla_twk_dlg_helper ]
+	do
+	  /sbin/busybox sleep 1
+	done
+
+	fi
+  fi
+
+else
+
+  if [ -f /sdcard/boeffla_twk_dlg_helper ]; then
+    rm /sdcard/boeffla_twk_dlg_helper
+  fi;
+  exit 0
+
+fi

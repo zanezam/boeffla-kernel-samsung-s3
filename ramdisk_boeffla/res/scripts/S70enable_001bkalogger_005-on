@@ -1,0 +1,6 @@
+#!/system/bin/sh
+#Android Logger
+#Enable or disable Android Logger:
+#On
+
+echo "1" > /sys/kernel/logger_mode/logger_mode

@@ -1,0 +1,6 @@
+#!/system/bin/sh
+#XBox support
+#XBox controller support
+#Off (default)
+
+rmmod /lib/modules/xpad.ko
