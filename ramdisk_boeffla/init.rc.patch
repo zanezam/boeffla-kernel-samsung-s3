@@ -1,20 +1,29 @@
-From 3d14bd9f80628500bce74a91018342fb94ee31cb Mon Sep 17 00:00:00 2001
+From 08090cbcc3b861f6757d0f17b5f7b5bcaf1446ee Mon Sep 17 00:00:00 2001
 From: andip71 <andreasp@gmx.de>
 Date: Sat, 20 Apr 2013 16:45:12 +0200
 Subject: [PATCH] 2
 
 ---
- init.rc |   19 ++++++++++---------
- 1 file changed, 10 insertions(+), 9 deletions(-)
+ init.rc |   16 ++++++++--------
+ 1 file changed, 8 insertions(+), 8 deletions(-)
 
 diff --git a/init.rc b/init.rc
-index 3a5c03a..e27457c 100755
+index 3a5c03a..a6fc1bc 100755
 --- a/init.rc
 +++ b/init.rc
-@@ -766,13 +766,6 @@ service bootanim /system/bin/bootanimation
+@@ -597,7 +597,7 @@ on boot
+     write /sys/block/zram0/disksize 209715200
+     chmod 0664 /sys/block/zram0/initstate
+     chown system system /sys/block/zram0/initstate
+-    write /sys/block/zram0/initstate 1
++#	write /sys/block/zram0/initstate 1 (Prepare zram for swap but don't activate it yet)
+ 
+ on nonencrypted
+     class_start late_start
+@@ -763,13 +763,6 @@ service bootanim /system/bin/bootanimation
      disabled
      oneshot
-
+ 
 -service samsungani /system/bin/samsungani
 -    class main
 -    user graphics
@@ -25,7 +34,7 @@ index 3a5c03a..e27457c 100755
  service dbus /system/bin/dbus-daemon --system --nofork
      class main
      socket dbus stream 660 bluetooth bluetooth
-@@ -886,3 +879,10 @@ on property:ro.dumpstate.dmesg=1
+@@ -872,3 +865,10 @@ on property:ro.dumpstate.dmesg=1
  on property:init.svc.media=restarting
      exec icd_check
      start icd

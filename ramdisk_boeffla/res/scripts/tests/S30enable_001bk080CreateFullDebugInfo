@@ -126,8 +126,7 @@ echo "\n**** SD Card read ahead:\n" >> $LOGFILE
 cat /sys/block/mmcblk0/bdi/read_ahead_kb >> $LOGFILE
 cat /sys/block/mmcblk1/bdi/read_ahead_kb >> $LOGFILE
 
-echo "\n**** System tweaks (swappiness/vfs_cache_pressure/dirty_background_ratio/dirty_ratio/drop_caches:\n" >> $LOGFILE
-cat /proc/sys/vm/swappiness >> $LOGFILE
+echo "\n**** System tweaks (vfs_cache_pressure/dirty_background_ratio/dirty_ratio/drop_caches:\n" >> $LOGFILE
 cat /proc/sys/vm/vfs_cache_pressure >> $LOGFILE
 cat /proc/sys/vm/dirty_background_ratio >> $LOGFILE
 cat /proc/sys/vm/dirty_ratio >> $LOGFILE
@@ -168,15 +167,14 @@ cat /sys/class/sec/led/led_speed >> $LOGFILE
 echo "\n**** LED slope:\n" >> $LOGFILE
 cat /sys/class/sec/led/led_slope >> $LOGFILE
 
-echo "\n============================================\n" >> $LOGFILE
+echo "\n**** zRam disk size:\n" >> $LOGFILE
+cat /sys/block/zram0/disksize >> $LOGFILE
 
-echo "\n**** /data/app folder\n" >> $LOGFILE
-ls -l /data/app >> $LOGFILE
+echo "\n**** zRam compressed data size:\n" >> $LOGFILE
+cat /sys/block/zram0/compr_data_size >> $LOGFILE
 
-echo "\n**** /system/app folder\n" >> $LOGFILE
-ls -l /system/app >> $LOGFILE
-
-echo "\n============================================\n" >> $LOGFILE
+echo "\n**** zRam original data size:\n" >> $LOGFILE
+cat /sys/block/zram0/orig_data_size >> $LOGFILE
 
 echo "\n**** Uptime:\n" >> $LOGFILE
 cat /proc/uptime >> $LOGFILE
@@ -187,23 +185,23 @@ cat /sys/devices/system/cpu/cpu0/cpufreq/stats/time_in_state >> $LOGFILE
 echo "\n**** Memory:\n" >> $LOGFILE
 /sbin/busybox free -m >> $LOGFILE
 
+echo "\n**** Meminfo:\n" >> $LOGFILE
+cat /proc/meminfo >> $LOGFILE
+
 echo "\n**** Swap:\n" >> $LOGFILE
 cat /proc/swaps >> $LOGFILE
+
+echo "\n**** Low memory killer:\n" >> $LOGFILE
+cat /sys/module/lowmemorykiller/parameters/minfree >> $LOGFILE
+
+echo "\n**** Swappiness:\n" >> $LOGFILE
+cat /proc/sys/vm/swappiness >> $LOGFILE
 
 echo "\n**** Storage:\n" >> $LOGFILE
 /sbin/busybox df >> $LOGFILE
 
 echo "\n**** Mounts:\n" >> $LOGFILE
 /sbin/busybox mount >> $LOGFILE
-
-echo "\n**** /system/etc/init.d folder\n" >> $LOGFILE
-ls -l /system/etc/init.d >> $LOGFILE
-
-echo "\n**** /etc/init.d folder\n" >> $LOGFILE
-ls -l /etc/init.d >> $LOGFILE
-
-echo "\n**** /data/init.d folder\n" >> $LOGFILE
-ls -l /data/init.d >> $LOGFILE
 
 echo "\n**** pegasusq tuneables\n" >> $LOGFILE
 cat /sys/devices/system/cpu/cpufreq/pegasusq/hotplug_freq_1_1 >> $LOGFILE
@@ -243,8 +241,31 @@ cat /sys/devices/system/cpu/cpufreq/zzmoove/up_threshold_sleep >> $LOGFILE
 cat /sys/devices/system/cpu/cpufreq/zzmoove/smooth_up_sleep >> $LOGFILE
 cat /sys/devices/system/cpu/cpufreq/zzmoove/hotplug_sleep >> $LOGFILE
 
+echo "\n============================================\n" >> $LOGFILE
+
+echo "\n**** /data/app folder\n" >> $LOGFILE
+ls -l /data/app >> $LOGFILE
+
+echo "\n**** /system/app folder\n" >> $LOGFILE
+ls -l /system/app >> $LOGFILE
+
+echo "\n============================================\n" >> $LOGFILE
+
+echo "\n**** /system/etc/init.d folder\n" >> $LOGFILE
+ls -l /system/etc/init.d >> $LOGFILE
+
+echo "\n**** /etc/init.d folder\n" >> $LOGFILE
+ls -l /etc/init.d >> $LOGFILE
+
+echo "\n**** /data/init.d folder\n" >> $LOGFILE
+ls -l /data/init.d >> $LOGFILE
+
+echo "\n============================================\n" >> $LOGFILE
+
 echo "\n**** last_kmsg\n" >> $LOGFILE
 cat /proc/last_kmsg  >> $LOGFILE
+
+echo "\n============================================\n" >> $LOGFILE
 
 echo "\n**** dmesg\n" >> $LOGFILE
 dmesg  >> $LOGFILE

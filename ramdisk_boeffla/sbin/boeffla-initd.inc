@@ -21,6 +21,8 @@ fi
 /sbin/busybox rm /system/etc/init.d/*_002bk*
 /sbin/busybox rm /system/etc/init.d/*_003bk*
 
+# Cleanup of old and obsolete scripts
+/sbin/busybox rm /system/etc/init.d/*bkzram_200-200
 
 # remount /system back to RO mode
 /sbin/busybox mount -o remount,ro -t ext4 $SYSTEM_DEVICE /system

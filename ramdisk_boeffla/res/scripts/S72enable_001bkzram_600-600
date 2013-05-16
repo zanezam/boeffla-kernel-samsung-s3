@@ -1,0 +1,19 @@
+#!/system/bin/sh
+#zRam swap
+#Requires reboot!!! zRam based swap functionality
+#600 MB
+
+# Display reboot dialog window
+if [ ! -f /system/etc/init.d/*bkzram_600-600 ]; then
+
+	rm /sdcard/boeffla_twk_dlg_helper
+
+	am start -a android.intent.action.MAIN -e message "zRam will ONLY be changed after next reboot!!! Please reboot now." -e title "zRam swap" -e okstyle "Ok" -n bo.boeffla.tweaks.dialog.helper/.BoefflaTweaksDialogActivity
+
+	while [ ! -f /sdcard/boeffla_twk_dlg_helper ]
+	do
+		/sbin/busybox sleep 1
+	done
+
+	rm /sdcard/boeffla_twk_dlg_helper
+fi

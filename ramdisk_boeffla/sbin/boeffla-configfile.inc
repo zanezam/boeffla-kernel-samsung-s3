@@ -169,6 +169,14 @@ if ! /sbin/busybox [ "`/sbin/busybox grep kernellogger $BOEFFLA_CONFIG`" ]; then
 fi
 
 
+# zRam swap
+
+if ! /sbin/busybox [ "`/sbin/busybox grep zRam $BOEFFLA_CONFIG`" ]; then
+	echo "zRam=off (off/100..800)" >> $BOEFFLA_CONFIG
+	echo " " >> $BOEFFLA_CONFIG
+fi
+
+
 # Auto root and configuration app (both options are only available via config file)
 
 if ! /sbin/busybox [ "`/sbin/busybox grep autoroot $BOEFFLA_CONFIG`" ]; then

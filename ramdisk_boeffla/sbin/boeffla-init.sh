@@ -91,6 +91,9 @@ echo $(date) Rom boot trigger detected, continuing after 8 more seconds... >> $B
 # System tweaks
 . /sbin/boeffla-systemtweaks.inc
 
+# zRam support
+. /sbin/boeffla-zram.inc
+
 # Ext4 tweaks
 . /sbin/boeffla-ext4.inc
 
