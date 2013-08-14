@@ -2163,13 +2163,10 @@ __alloc_pages_slowpath(gfp_t gfp_mask, unsigned int order,
 	unsigned long pages_reclaimed = 0;
 	unsigned long did_some_progress;
 	bool sync_migration = false;
-<<<<<<< HEAD
 #ifdef CONFIG_ANDROID_WIP
 	unsigned long start_tick = jiffies;
 #endif
-=======
 	bool deferred_compaction = false;
->>>>>>> v3.0.39
 
 	/*
 	 * In the slowpath, we sanity check order to avoid ever trying to
