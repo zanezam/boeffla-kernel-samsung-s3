@@ -1,0 +1,56 @@
+From 135731801df2f416e05508ee4ec30e94c9f4aeaf Mon Sep 17 00:00:00 2001
+From: andip71 <andreasp@gmx.de>
+Date: Mon, 11 Nov 2013 16:41:14 +0100
+Subject: [PATCH] init.rc
+
+---
+ init.rc | 22 +++++++++++++++-------
+ 1 file changed, 15 insertions(+), 7 deletions(-)
+
+diff --git a/init.rc b/init.rc
+index a5324b1..385ca01 100755
+--- a/init.rc
++++ b/init.rc
+@@ -149,6 +149,10 @@ loglevel 3
+ # This is needed by any process that uses socket tagging.
+     chmod 0644 /dev/xt_qtaguid
+ 
++# ko files for exfat -> AP: modules instead compiled into kernel
++    insmod /lib/modules/exfat_core.ko
++    insmod /lib/modules/exfat_fs.ko
++    
+ on fs
+ # mount mtd partitions
+     # Mount /system rw first to give the filesystem a chance to save a checkpoint
+@@ -844,12 +848,12 @@ service powersnd /system/bin/samsungpowersoundplay
+     disabled
+     oneshot
+ 
+-service bootanim /system/bin/bootanimation
+-    class main
+-    user graphics
+-    group graphics system
+-    disabled
+-    oneshot
++# service bootanim /system/bin/bootanimation -> AP removed to allow custom boot animation
++#    class main
++#    user graphics
++#    group graphics system
++#    disabled
++#    oneshot
+ 
+ service installd /system/bin/installd
+     class main
+@@ -966,4 +970,8 @@ on property:persist.sys.drs.enforce=1
+ on property:persist.sys.drs.enforce=0
+ 	start auditd
+ 	
+-	
++# Call Boeffla-Kernel init script
++service boeffla-init /sbin/boeffla-init.sh
++    class core
++    user root
++    oneshot	
+-- 
+1.8.1.2
+
