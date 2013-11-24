@@ -1155,17 +1155,17 @@ fi
 if [ "apply_ext4_tweaks" == "$1" ]; then
 	if [ "1" == "$2" ]; then
 		busybox sync
-		busybox mount -o remount,commit=20,noatime /dev/block/mmcblk0p8 /cache
+		mount -o remount,commit=20,noatime /dev/block/mmcblk0p8 /cache
 		busybox sync
-		busybox mount -o remount,commit=20,noatime /dev/block/mmcblk0p12 /data
+		mount -o remount,commit=20,noatime /dev/block/mmcblk0p12 /data
 		busybox sync
 	fi
 
 	if [ "0" == "$2" ]; then
 		busybox sync
-		busybox mount -o remount,commit=0,noatime /dev/block/mmcblk0p8 /cache
+		mount -o remount,commit=0,noatime /dev/block/mmcblk0p8 /cache
 		busybox sync
-		busybox mount -o remount,commit=0,noatime /dev/block/mmcblk0p12 /data
+		mount -o remount,commit=0,noatime /dev/block/mmcblk0p12 /data
 		busybox sync
 	fi
 	exit 0
@@ -1298,7 +1298,7 @@ fi
 
 if [ "apply_ums" == "$1" ]; then
 	if [ "1" == "$2" ]; then
-		busybox umount -l /mnt/extSdCard/
+		umount -l /mnt/extSdCard/
 		/system/bin/setprop persist.sys.usb.config mass_storage,adb
 		echo /dev/block/vold/179:49 > /sys/devices/platform/s3c-usbgadget/gadget/lun0/file
 	fi
@@ -1559,7 +1559,7 @@ if [ "action_debug_info_file" == "$1" ]; then
 	busybox df >> $2
 
 	echo -e "\n**** Mounts:\n" >> $2
-	busybox mount >> $2
+	mount >> $2
 
 	echo -e "\n**** pegasusq tuneables\n" >> $2
 	cat /sys/devices/system/cpu/cpufreq/pegasusq/hotplug_freq_1_1 >> $2
@@ -1739,9 +1739,9 @@ fi
 
 if [ "action_clean_initd" == "$1" ]; then
 	busybox tar cvz -f $2 /system/etc/init.d
-	busybox mount -o remount,rw -t ext4 /dev/block/mmcblk0p9 /system
+	mount -o remount,rw -t ext4 /dev/block/mmcblk0p9 /system
 	busybox rm /system/etc/init.d/*
-	busybox mount -o remount,ro -t ext4 /dev/block/mmcblk0p9 /system
+	mount -o remount,ro -t ext4 /dev/block/mmcblk0p9 /system
 	exit 0
 fi
 
@@ -1811,11 +1811,11 @@ fi
 
 if [ "flash_cm_kernel" == "$1" ]; then
 	busybox dd if=$2/boot.img of=/dev/block/mmcblk0p5
-	busybox mount -o remount,rw -t ext4 /dev/block/mmcblk0p9 /system
+	mount -o remount,rw -t ext4 /dev/block/mmcblk0p9 /system
 	busybox rm -f /system/lib/modules/*
 	busybox cp $2/system/lib/modules/* /system/lib/modules
 	busybox chmod 644 /system/lib/modules/*
-	busybox mount -o remount,ro -t ext4 /dev/block/mmcblk0p9 /system
+	mount -o remount,ro -t ext4 /dev/block/mmcblk0p9 /system
 	exit 0
 fi
 

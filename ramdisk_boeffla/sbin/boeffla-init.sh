@@ -26,6 +26,8 @@ BOEFFLA_LOGFILE="$BOEFFLA_DATA_PATH/boeffla-kernel.log"
 BOEFFLA_STARTCONFIG="/data/.boeffla/startconfig"
 BOEFFLA_STARTCONFIG_DONE="/data/.boeffla/startconfig_done"
 CWM_RESET_ZIP="boeffla-config-reset-v2.zip"
+INITD_ENABLER="/data/.boeffla/enable-initd"
+
 
 # If not yet exists, create a boeffla-kernel-data folder on sdcard 
 # which is used for many purposes (set permissions and owners correctly)
@@ -49,22 +51,31 @@ CWM_RESET_ZIP="boeffla-config-reset-v2.zip"
 	/sbin/busybox grep ro.build.version /system/build.prop >> $BOEFFLA_LOGFILE
 	echo "=========================" >> $BOEFFLA_LOGFILE
 
+# If rom comes without mount command in /system/bin folder, create busybox symlinks for mount/umount
+	if [ ! -f /system/bin/mount ]; then
+		/sbin/busybox mount -o remount,rw /
+		/sbin/busybox ln /sbin/busybox /sbin/mount
+		/sbin/busybox ln /sbin/busybox /sbin/umount
+		/sbin/busybox mount -o remount,ro /
+		echo $(date) "Rom does not come with mount command, symlinks created" > $BOEFFLA_LOGFILE
+	fi
+		
 # Correct /sbin and /res directory and file permissions
-	/sbin/busybox mount -o remount,rw /
+	mount -o remount,rw /
 
 	# change permissions of /sbin folder and scripts in /res/bc
 	/sbin/busybox chmod -R 755 /sbin
 	/sbin/busybox chmod 755 /res/bc/*
 
 	/sbin/busybox sync
-	/sbin/busybox mount -o remount,ro /
+	mount -o remount,ro /
 
 # Custom boot animation support only for Samsung Kernels,
 # boeffla sound change delay changed only for Samsung Kernels
 	if [ "SAM1" == "$KERNEL" ]; then
 	
 		# check whether custom boot animation is available to be played
-		if /sbin/busybox [ -f /data/local/bootanimation.zip ] || /sbin/busybox [ -f /system/media/bootanimation.zip ]; then
+		if [ -f /data/local/bootanimation.zip ] || [ -f /system/media/bootanimation.zip ]; then
 				echo $(date) Playing custom boot animation >> $BOEFFLA_LOGFILE
 				/system/bin/bootanimation &
 		else
@@ -80,7 +91,7 @@ CWM_RESET_ZIP="boeffla-config-reset-v2.zip"
 	if [ "SAM2" == "$KERNEL" ]; then
 	
 		# check whether custom boot animation is available to be played
-		if /sbin/busybox [ -f /data/local/bootanimation.zip ] || /sbin/busybox [ -f /system/media/bootanimation.zip ]; then
+		if [ -f /data/local/bootanimation.zip ] || [ -f /system/media/bootanimation.zip ]; then
 				echo $(date) Playing custom boot animation >> $BOEFFLA_LOGFILE
 				/sbin/bootanimation &
 		else
@@ -100,9 +111,9 @@ CWM_RESET_ZIP="boeffla-config-reset-v2.zip"
 
 	# Ext4 tweaks default to on
 	sync
-	/sbin/busybox mount -o remount,commit=20,noatime $CACHE_DEVICE /cache
+	mount -o remount,commit=20,noatime $CACHE_DEVICE /cache
 	sync
-	/sbin/busybox mount -o remount,commit=20,noatime $DATA_DEVICE /data
+	mount -o remount,commit=20,noatime $DATA_DEVICE /data
 	sync
 	echo $(date) Ext4 tweaks applied >> $BOEFFLA_LOGFILE
 
@@ -116,17 +127,21 @@ CWM_RESET_ZIP="boeffla-config-reset-v2.zip"
 	echo "1100" > /sys/kernel/charge_levels/charge_level_ac
 	echo $(date) "AC charge rate set to 1100 mA" >> $BOEFFLA_LOGFILE
 
-# init.d support
-	echo $(date) Execute init.d scripts start >> $BOEFFLA_LOGFILE
-	if cd /system/etc/init.d >/dev/null 2>&1 ; then
-		for file in * ; do
-			if ! cat "$file" >/dev/null 2>&1 ; then continue ; fi
-			echo $(date) init.d file $file started >> $BOEFFLA_LOGFILE
-			/system/bin/sh "$file"
-			echo $(date) init.d file $file executed >> $BOEFFLA_LOGFILE
-		done
+# init.d support, only if enabled in settings or file in data folder
+	if [ "CM" != "$KERNEL" ] || [ -f $INITD_ENABLER ] ; then
+		echo $(date) Execute init.d scripts start >> $BOEFFLA_LOGFILE
+		if cd /system/etc/init.d >/dev/null 2>&1 ; then
+			for file in * ; do
+				if ! cat "$file" >/dev/null 2>&1 ; then continue ; fi
+				echo $(date) init.d file $file started >> $BOEFFLA_LOGFILE
+				/system/bin/sh "$file"
+				echo $(date) init.d file $file executed >> $BOEFFLA_LOGFILE
+			done
+		fi
+		echo $(date) Finished executing init.d scripts >> $BOEFFLA_LOGFILE
+	else
+		echo $(date) init.d script handling by kernel disabled >> $BOEFFLA_LOGFILE
 	fi
-	echo $(date) Finished executing init.d scripts >> $BOEFFLA_LOGFILE
 
 # Wait for 2 seconds before we continue
 	echo $(date) Waiting 2 seconds... >> $BOEFFLA_LOGFILE
@@ -173,15 +188,6 @@ CWM_RESET_ZIP="boeffla-config-reset-v2.zip"
 		echo $(date) Startup configuration applied  >> $BOEFFLA_LOGFILE
 	fi
 	
-# Cleanup: delete the old scriptmanager and dialog helper app
-# and delete old config scripts in init.d
-	/system/bin/pm uninstall bo.boeffla
-	/system/bin/pm uninstall bo.boeffla.tweaks.dialog.helper
-	/sbin/busybox mount -o remount,rw -t ext4 $SYSTEM_DEVICE /system
-	/sbin/busybox rm /system/etc/init.d/*_bk*
-	/sbin/busybox rm /system/etc/init.d/*_???bk*
-	/sbin/busybox mount -o remount,ro -t ext4 $SYSTEM_DEVICE /system
-
 # Turn off debugging for certain modules
 	echo 0 > /sys/module/ump/parameters/ump_debug_level
 	echo 0 > /sys/module/mali/parameters/mali_debug_level
@@ -199,11 +205,11 @@ CWM_RESET_ZIP="boeffla-config-reset-v2.zip"
 		echo $(date) Auto root is enabled >> $BOEFFLA_LOGFILE
 
 		if [ ! -f /system/xbin/su ] && [ ! -f /system/bin/su ]; then
-			/sbin/busybox mount -o remount,rw -t ext4 $SYSTEM_DEVICE /system
+			mount -o remount,rw -t ext4 $SYSTEM_DEVICE /system
 			/sbin/busybox cp /res/misc/su /system/xbin/su
 			/sbin/busybox chown 0.0 /system/xbin/su
 			/sbin/busybox chmod 6755 /system/xbin/su
-			/sbin/busybox mount -o remount,ro -t ext4 $SYSTEM_DEVICE /system
+			mount -o remount,ro -t ext4 $SYSTEM_DEVICE /system
 			echo $(date) Auto root: su binariy copied >> $BOEFFLA_LOGFILE
 		fi
 
