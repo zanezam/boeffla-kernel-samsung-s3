@@ -153,8 +153,8 @@ INITD_ENABLER="/data/.boeffla/enable-initd"
 	while ! /sbin/busybox pgrep android.process.acore ; do
 	  /sbin/busybox sleep 1
 	done
-	echo $(date) Rom boot trigger detected, waiting 5 more seconds... >> $BOEFFLA_LOGFILE
-	/sbin/busybox sleep 5
+	echo $(date) Rom boot trigger detected, waiting 10 more seconds... >> $BOEFFLA_LOGFILE
+	/sbin/busybox sleep 10
 
 # Play sound for Boeffla-Sound compatibility
 	/sbin/tinyplay /res/misc/silence.wav -D 0 -d 0 -p 880
