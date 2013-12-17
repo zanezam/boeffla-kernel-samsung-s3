@@ -1,6 +1,6 @@
 # Boeffla-Config controller interface
 #
-# Version: No GPU frequencies
+# Version: GPU 5 frequencies
 #
 # (C) andip71
 
@@ -31,7 +31,7 @@ if [ "lov_cpu_volt_profiles" == "$1" ]; then
 fi
 
 if [ "lov_gpu_freq_profiles" == "$1" ]; then
-	echo "54 only;160 only;160/266;266/350;54/108/160/266;108/160/266/350;160/266/350/440 (default);266/350/440/533;350/440/533/600;440/533/600/700"
+	echo "54 only;160 only;160/266;266/350;54/108/160/200/266;108/160/200/266/350;160/266/350/440/533 (default);266/350/440/533/600;350/440/533/600/640;440/533/600/640/700"
 	exit 0
 fi
 
@@ -41,7 +41,7 @@ if [ "lov_gpu_volt_profiles" == "$1" ]; then
 fi
 
 if [ "lov_gpu_freq" == "$1" ]; then
-	echo "54;108;160;266;350;440;533;600;700"
+	echo "54;108;160;200;266;300;350;400;440;500;533;600;640;700"
 	exit 0
 fi
 
@@ -65,27 +65,32 @@ if [ "lov_presets" == "$1" ]; then
 	echo "Power extreme~"
 	echo "Gov: lulzactiveq / no profile"
 	echo "^Sched: row / row"
-	echo "^CPU: 1600 / no uv;"
+	echo "^CPU: 1600 / no uv"
+	echo "^GPU: 440-700 / +25mV;"
 	
 	echo "Power~"
 	echo "Gov: zzmoove / zzmoove-performance"
 	echo "^Sched: row / row"
-	echo "^CPU: 1500 / no uv;"
+	echo "^CPU: 1500 / no uv"
+	echo "^GPU: 266-600 / no uv;"
 	
 	echo "Standard~"
 	echo "Gov: pegasusq / no profile"
 	echo "^Sched: cfq / cfq"
-	echo "^CPU: 1400 / no uv;"
+	echo "^CPU: 1400 / no uv"
+	echo "^GPU: 160-440 / no uv;"
 	
 	echo "Battery friendly~"
 	echo "Gov: pegasusq / boeffla-moderate"
 	echo "^Sched: cfq / cfq"
-	echo "^CPU: 1400 / -25mV;"
+	echo "^CPU: 1400 / -25mV"
+	echo "^GPU: 160/266 / -25mV;"
 	
 	echo "Battery saving~"
 	echo "Gov: zzmoove / zzmoove-battery"
 	echo "^Sched: cfq / cfq"
-	echo "^CPU: 1000 / light uv;"
+	echo "^CPU: 1000 / light uv"
+	echo "^GPU: 160/266 / light uv;"
 	
 	exit 0
 fi
@@ -101,14 +106,14 @@ if [ "conf_presets" == "$1" ]; then
 		echo "lulzactiveq;None;"
 		echo "row;row;"
 		echo "1600000;None;"
-		echo "None;None"
+		echo "440/533/600/640/700;overvolt +25mV"
 	fi
 	if [ "Power" ==  "$2" ]; then
 		# gov, gov prof, sched int, sched ext, cpu max, cpu uv, gpu freq, gpu uv
 		echo "zzmoove;zzmoove - performance;"
 		echo "row;row;"
 		echo "1500000;None;"
-		echo "None;None"
+		echo "266/350/440/533/600;None"
 	fi
 	if [ "Standard" ==  "$2" ]; then
 		# gov, gov prof, sched int, sched ext, cpu max, cpu uv, gpu freq, gpu uv
@@ -122,14 +127,14 @@ if [ "conf_presets" == "$1" ]; then
 		echo "pegasusq;pegasusq - boeffla moderate;"
 		echo "cfq;cfq;"
 		echo "1400000;undervolt -25mV;"
-		echo "None;None"
+		echo "160/266;undervolt -25mV"
 	fi
 	if [ "Battery saving" ==  "$2" ]; then
 		# gov, gov prof, sched int, sched ext, cpu max, cpu uv, gpu freq, gpu uv
 		echo "zzmoove;zzmoove - battery;"
 		echo "cfq;cfq;"
 		echo "1000000;undervolt light;"
-		echo "None;None"
+		echo "160/266;undervolt light"
 	fi
 	exit 0
 fi
@@ -137,34 +142,34 @@ fi
 
 if [ "conf_gpu_freq" == "$1" ]; then
 	if [ "54 only" == "$2" ]; then
-		echo "54;54;54;54"
+		echo "54;54;54;54;54"
 	fi
 	if [ "160 only" == "$2" ]; then
-		echo "160;160;160;160"
+		echo "160;160;160;160;160"
 	fi
 	if [ "160/266" == "$2" ]; then
-		echo "160;160;266;266"
+		echo "160;160;160;266;266"
 	fi
 	if [ "266/350" == "$2" ]; then
-		echo "266;266;350;350"
+		echo "266;266;266;350;350"
 	fi
-	if [ "54/108/160/266" == "$2" ]; then
-		echo "54;108;160;266"
+	if [ "54/108/160/200/266" == "$2" ]; then
+		echo "54;108;160;200;266"
 	fi
-	if [ "108/160/266/350" == "$2" ]; then
-		echo "108 160 266 350"
+	if [ "108/160/200/266/350" == "$2" ]; then
+		echo "108;160;200;266;350"
 	fi
-	if [ "160/266/350/440 (default)" == "$2" ]; then
-		echo "160;266;350;440"
+	if [ "160/266/350/440/533 (default)" == "$2" ]; then
+		echo "160;266;350;440;533"
 	fi
-	if [ "266/350/440/533" == "$2" ]; then
-		echo "266;350;440;533"
+	if [ "266/350/440/533/600" == "$2" ]; then
+		echo "266;350;440;533;600"
 	fi
-	if [ "350/440/533/600" == "$2" ]; then
-		echo "350;440;533;600"
+	if [ "350/440/533/600/640" == "$2" ]; then
+		echo "350;440;533;600;640"
 	fi
-	if [ "440/533/600/700" == "$2" ]; then
-		echo "440;533;600;700"
+	if [ "440/533/600/640/700" == "$2" ]; then
+		echo "440;533;600;640;700"
 	fi
 	exit 0
 fi
@@ -172,37 +177,37 @@ fi
 
 if [ "conf_gpu_volt" == "$1" ]; then
 	if [ "undervolt -25mV" == "$2" ]; then
-		echo "-25000;-25000;-25000;-25000"
+		echo "-25000;-25000;-25000;-25000;-25000"
 	fi
 	if [ "undervolt -50mV" == "$2" ]; then
-		echo "-50000;-50000;-50000;-50000"
+		echo "-50000;-50000;-50000;-50000;-50000"
 	fi
 	if [ "undervolt -75mV" == "$2" ]; then
-		echo "-75000;-75000;-75000;-75000"
+		echo "-75000;-75000;-75000;-75000;-75000"
 	fi
 	if [ "undervolt -100mV" == "$2" ]; then
-		echo "-100000;-100000;-100000;-100000"
+		echo "-100000;-100000;-100000;-100000;-100000"
 	fi
 	if [ "undervolt light" == "$2" ]; then
-		echo "-25000;-25000;-50000;-50000"
+		echo "-25000;-25000;-25000;-50000;-50000"
 	fi
 	if [ "undervolt medium" == "$2" ]; then
-		echo "-50000;-50000;-75000;-75000"
+		echo "-50000;-50000;-50000;-75000;-75000"
 	fi
 	if [ "undervolt heavy" == "$2" ]; then
-		echo "-75000;-75000;-100000;-100000"
+		echo "-75000;-75000;-75000;-100000;-100000"
 	fi
 	if [ "overvolt +25mV" == "$2" ]; then
-		echo "25000;25000;25000;25000"
+		echo "25000;25000;25000;25000;25000"
 	fi
 	if [ "overvolt +50mV" == "$2" ]; then
-		echo "50000;50000;50000;50000"
+		echo "50000;50000;50000;50000;50000"
 	fi
 	if [ "overvolt +75mV" == "$2" ]; then
-		echo "75000;75000;75000;75000"
+		echo "75000;75000;75000;75000;75000"
 	fi
 	if [ "overvolt +100mV" == "$2" ]; then
-		echo "100000;100000;100000;100000"
+		echo "100000;100000;100000;100000;100000"
 	fi
 	exit 0
 fi
