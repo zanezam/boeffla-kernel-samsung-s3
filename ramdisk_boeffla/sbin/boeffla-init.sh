@@ -70,6 +70,9 @@ INITD_ENABLER="/data/.boeffla/enable-initd"
 	/sbin/busybox sync
 	mount -o remount,ro /
 
+# remove any obsolete Boeffla-Config V2 startconfig done file
+/sbin/busybox rm -f $BOEFFLA_STARTCONFIG_DONE
+
 # Custom boot animation support only for Samsung Kernels,
 # boeffla sound change delay changed only for Samsung Kernels
 	if [ "SAM1" == "$KERNEL" ]; then
@@ -143,20 +146,17 @@ INITD_ENABLER="/data/.boeffla/enable-initd"
 		echo $(date) init.d script handling by kernel disabled >> $BOEFFLA_LOGFILE
 	fi
 
-# Wait for 2 seconds before we continue
-	echo $(date) Waiting 2 seconds... >> $BOEFFLA_LOGFILE
-	/sbin/busybox sleep 2
-
 # Now wait for the rom to finish booting up
 # (by checking for the android acore process)
 	echo $(date) Checking for Rom boot trigger... >> $BOEFFLA_LOGFILE
 	while ! /sbin/busybox pgrep android.process.acore ; do
 	  /sbin/busybox sleep 1
 	done
-	echo $(date) Rom boot trigger detected, waiting 10 more seconds... >> $BOEFFLA_LOGFILE
-	/sbin/busybox sleep 10
+	echo $(date) Rom boot trigger detected, waiting a few more seconds... >> $BOEFFLA_LOGFILE
+	/sbin/busybox sleep 3
 
 # Play sound for Boeffla-Sound compatibility
+	echo $(date) Initialize sound system... >> $BOEFFLA_LOGFILE
 	/sbin/tinyplay /res/misc/silence.wav -D 0 -d 0 -p 880
 
 # Disable Samsung standard zRam implementation if new concept Samsung kernel
@@ -176,9 +176,6 @@ INITD_ENABLER="/data/.boeffla/enable-initd"
 	cat /sys/kernel/charge_levels/charge_level_wireless > /dev/bk_orig_charge_level_wireless
 	cat /sys/module/lowmemorykiller/parameters/minfree > /dev/bk_orig_minfree
 	/sbin/busybox lsmod > /dev/bk_orig_modules
-
-	# remove old startconfig done file
-	/sbin/busybox rm -f $BOEFFLA_STARTCONFIG_DONE
 
 	# if there is a startconfig placed by Boeffla-Config V2 app, execute it
 	if [ -f $BOEFFLA_STARTCONFIG ]; then
