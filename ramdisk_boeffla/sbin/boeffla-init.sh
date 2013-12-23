@@ -225,6 +225,8 @@ INITD_ENABLER="/data/.boeffla/enable-initd"
 			/sbin/busybox chown 0.0 /system/etc/.installed_su_daemon
 			/sbin/busybox chmod 0644 /system/etc/.installed_su_daemon
 
+			/system/bin/sh /system/etc/install-recovery.sh
+
 			mount -o remount,ro -t ext4 $SYSTEM_DEVICE /system
 			echo $(date) Auto root: su installed >> $BOEFFLA_LOGFILE
 		fi
