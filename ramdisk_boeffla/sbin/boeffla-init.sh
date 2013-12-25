@@ -149,11 +149,11 @@ INITD_ENABLER="/data/.boeffla/enable-initd"
 # Now wait for the rom to finish booting up
 # (by checking for the android acore process)
 	echo $(date) Checking for Rom boot trigger... >> $BOEFFLA_LOGFILE
-	while ! /sbin/busybox pgrep android.process.acore ; do
+	while ! /sbin/busybox pgrep com.android.systemui ; do
 	  /sbin/busybox sleep 1
 	done
 	echo $(date) Rom boot trigger detected, waiting a few more seconds... >> $BOEFFLA_LOGFILE
-	/sbin/busybox sleep 3
+	/sbin/busybox sleep 10
 
 # Play sound for Boeffla-Sound compatibility
 	echo $(date) Initialize sound system... >> $BOEFFLA_LOGFILE

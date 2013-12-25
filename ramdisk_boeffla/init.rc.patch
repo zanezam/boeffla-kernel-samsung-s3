@@ -41,15 +41,16 @@ index a5324b1..385ca01 100755
  
  service installd /system/bin/installd
      class main
-@@ -966,4 +970,8 @@ on property:persist.sys.drs.enforce=1
+@@ -966,4 +970,9 @@ on property:persist.sys.drs.enforce=1
  on property:persist.sys.drs.enforce=0
  	start auditd
  	
 -	
 +# Call Boeffla-Kernel init script
 +service boeffla-init /sbin/boeffla-init.sh
-+    class core
++    class main
 +    user root
++    group root
 +    oneshot	
 -- 
 1.8.1.2
