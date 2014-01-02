@@ -1,6 +1,6 @@
 # Boeffla-Config controller interface
 #
-# Version: GPU 5 frequencies, no UMS switch
+# Version: GPU 5 frequencies
 #
 # (C) andip71
 
@@ -355,12 +355,11 @@ fi
 # *******************
 
 if [ "get_ums" == "$1" ]; then
-	#if [ "`busybox grep 179 /sys/devices/platform/s3c-usbgadget/gadget/lun0/file`" ]; then
-	#	echo "1"
-	#else
-	#	echo "0"
-	#fi
-	echo ""
+	if [ "`busybox grep 179 /sys/devices/platform/s3c-usbgadget/gadget/lun0/file`" ]; then
+		echo "1"
+	else
+		echo "0"
+	fi
 	exit 0
 fi
 
@@ -1303,17 +1302,17 @@ if [ "apply_ntfs" == "$1" ]; then
 fi
 
 if [ "apply_ums" == "$1" ]; then
-	#if [ "1" == "$2" ]; then
-	#	umount -l /mnt/extSdCard/
-	#	/system/bin/setprop persist.sys.usb.config mass_storage,adb
-	#	echo /dev/block/vold/179:49 > /sys/devices/platform/s3c-usbgadget/gadget/lun0/file
-	#fi
+	if [ "1" == "$2" ]; then
+		umount -l /mnt/extSdCard/
+		/system/bin/setprop persist.sys.usb.config mass_storage,adb
+		echo /dev/block/vold/179:17 > /sys/devices/platform/s3c-usbgadget/gadget/lun0/file
+	fi
 
-	#if [ "0" == "$2" ]; then
-	#	echo "" > /sys/devices/platform/s3c-usbgadget/gadget/lun0/file
-	#	/system/bin/vold
-	#	/system/bin/setprop persist.sys.usb.config mtp,adb
-	#fi
+	if [ "0" == "$2" ]; then
+		echo "" > /sys/devices/platform/s3c-usbgadget/gadget/lun0/file
+		/system/bin/vold
+		/system/bin/setprop persist.sys.usb.config mtp,adb
+	fi
 	exit 0
 fi
 
