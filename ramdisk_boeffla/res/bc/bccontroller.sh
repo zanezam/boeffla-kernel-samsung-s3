@@ -11,6 +11,10 @@
 # kernel specification (hardware; type; target; url)
 KERNEL_SPECS="i9300;samsung;jb43;http://boeffla.df-kunde.de/sgs3/boeffla-kernel/"
 
+# kernel features 
+# (1=enable-busybox)
+KERNEL_FEATURES="-1-"
+
 # path to kernel libraries
 LIBPATH="/lib/modules"				# Samsung
 #LIBPATH="/system/lib/modules"		# Cyanogenmod+Omni
@@ -390,6 +394,11 @@ fi
 
 if [ "get_kernel_specs" == "$1" ]; then
 	echo $KERNEL_SPECS
+	exit 0
+fi
+
+if [ "get_kernel_features" == "$1" ]; then
+	echo $KERNEL_FEATURES
 	exit 0
 fi
 
