@@ -373,12 +373,7 @@ KBUILD_CFLAGS   := -Wall -Wundef -Wstrict-prototypes -Wno-trigraphs \
 		   -Wno-format-security \
 		   -fno-delete-null-pointer-checks \
  		   -marm -march=armv7-a \
-		   -mcpu=cortex-a9 -mtune=cortex-a9 \
- 		   -mfpu=neon \
-		   -fno-schedule-insns2 \
- 		   -mno-unaligned-access \
-		   -fno-pic
-
+		   -mcpu=cortex-a9 -mtune=cortex-a9 -fno-pic
 KBUILD_AFLAGS_KERNEL :=
 KBUILD_CFLAGS_KERNEL :=
 KBUILD_AFLAGS   := -D__ASSEMBLY__
@@ -571,7 +566,7 @@ all: vmlinux
 ifdef CONFIG_CC_OPTIMIZE_FOR_SIZE
 KBUILD_CFLAGS	+= -Os
 else
-KBUILD_CFLAGS	+= -O3
+KBUILD_CFLAGS	+= -O2
 endif
 
 ifdef CONFIG_CC_CHECK_WARNING_STRICTLY
