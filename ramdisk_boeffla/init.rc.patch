@@ -1,39 +1,40 @@
-From 135731801df2f416e05508ee4ec30e94c9f4aeaf Mon Sep 17 00:00:00 2001
+From 686e04b1e7d1d423eb48facea4698fbf1562b0e1 Mon Sep 17 00:00:00 2001
 From: andip71 <andreasp@gmx.de>
-Date: Mon, 11 Nov 2013 16:41:14 +0100
-Subject: [PATCH] init.rc
+Date: Tue, 27 May 2014 09:41:35 +0200
+Subject: [PATCH] b
 
 ---
- init.rc | 22 +++++++++++++++-------
- 1 file changed, 15 insertions(+), 7 deletions(-)
+ init.rc | 25 +++++++++++++++++++------
+ 1 file changed, 19 insertions(+), 6 deletions(-)
 
 diff --git a/init.rc b/init.rc
-index a5324b1..385ca01 100755
+index 1f17e2e..de747cf 100755
 --- a/init.rc
 +++ b/init.rc
-@@ -75,6 +75,8 @@ loglevel 3
-     # See storage config details at http://source.android.com/tech/storage/
-     mkdir /mnt/shell 0700 shell shell
-     mkdir /storage 0050 root sdcard_r
+@@ -60,6 +60,9 @@ loglevel 3
+     mkdir /mnt/shell 0750 shell shell
+     mkdir /mnt/media_rw 0700 media_rw media_rw
+     mkdir /storage 0751 root sdcard_r
++
 +    # Create mountpoint so Dalvik can mark as slave in zygotes.
 +    mount tmpfs tmpfs /storage mode=0050,uid=0,gid=1028
- 
+         
      # Directory for putting things only root should see.
      mkdir /mnt/secure 0700 root root
-@@ -149,6 +149,10 @@ loglevel 3
+@@ -136,6 +139,10 @@ loglevel 3
  # This is needed by any process that uses socket tagging.
      chmod 0644 /dev/xt_qtaguid
  
 +# ko files for exfat -> AP: modules instead compiled into kernel
 +    insmod /lib/modules/exfat_core.ko
 +    insmod /lib/modules/exfat_fs.ko
-+    
++
  on fs
  # mount mtd partitions
      # Mount /system rw first to give the filesystem a chance to save a checkpoint
-@@ -844,12 +848,12 @@ service powersnd /system/bin/samsungpowersoundplay
-     disabled
-     oneshot
+@@ -727,12 +734,12 @@ service powersnd /system/bin/samsungpowersoundplay
+      disabled
+      oneshot
  
 -service bootanim /system/bin/bootanimation
 -    class main
@@ -41,7 +42,7 @@ index a5324b1..385ca01 100755
 -    group graphics system
 -    disabled
 -    oneshot
-+# service bootanim /system/bin/bootanimation -> AP removed to allow custom boot animation
++#service bootanim /system/bin/bootanimation
 +#    class main
 +#    user graphics
 +#    group graphics system
@@ -50,17 +51,16 @@ index a5324b1..385ca01 100755
  
  service installd /system/bin/installd
      class main
-@@ -966,4 +970,9 @@ on property:persist.sys.drs.enforce=1
- on property:persist.sys.drs.enforce=0
- 	start auditd
- 	
--	
+@@ -822,3 +829,9 @@ service drsd /system/bin/drsd
+     class main
+     socket drsd stream 600 system system
+ 
 +# Call Boeffla-Kernel init script
 +service boeffla-init /sbin/boeffla-init.sh
 +    class main
 +    user root
 +    group root
-+    oneshot	
++    oneshot
 -- 
 1.8.1.2
 
