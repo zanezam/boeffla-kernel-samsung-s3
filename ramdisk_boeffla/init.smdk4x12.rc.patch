@@ -1,0 +1,31 @@
+From 935c4e7a0471c03b251048568778bf5590db855b Mon Sep 17 00:00:00 2001
+From: andip71 <andreasp@gmx.de>
+Date: Wed, 28 May 2014 17:07:58 +0200
+Subject: [PATCH] f
+
+---
+ init.smdk4x12.rc | 8 ++++----
+ 1 file changed, 4 insertions(+), 4 deletions(-)
+
+diff --git a/init.smdk4x12.rc b/init.smdk4x12.rc
+index 62c12a3..453c36f 100755
+--- a/init.smdk4x12.rc
++++ b/init.smdk4x12.rc
+@@ -481,10 +481,10 @@ on property:ro.dumpstate.dmesg=1
+     write /proc/sys/kernel/dmesg_restrict 0
+ 
+ # Runtime Compcache
+-service rtccd /system/bin/rtccd2 -a 300M
+-    class core
+-    user root
+-    oneshot
++#service rtccd /system/bin/rtccd2 -a 300M
++#    class core
++#    user root
++#    oneshot
+ 
+ # Secure Storage startup
+ service prepare-ssdaemon /system/bin/sh /system/bin/ss-presetup.sh
+-- 
+1.8.1.2
+
