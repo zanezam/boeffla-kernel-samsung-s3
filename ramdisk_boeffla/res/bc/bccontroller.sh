@@ -9,7 +9,7 @@
 # ********************************
 
 # kernel specification (hardware; type; target; url)
-KERNEL_SPECS="i9300;samsung;jb43;http://boeffla.df-kunde.de/sgs3/boeffla-kernel/"
+KERNEL_SPECS="i9300;samsung;jb44;http://boeffla.df-kunde.de/sgs3/boeffla-kernel/"
 
 # kernel features 
 # (1=enable-busybox,2=enable-frandom,3=wipe-cache)
