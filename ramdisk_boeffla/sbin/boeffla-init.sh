@@ -282,5 +282,12 @@ FRANDOM_ENABLER="/data/.boeffla/enable-frandom"
 		echo $(date) CWM reset zip copied >> $BOEFFLA_LOGFILE
 	fi
 
+# Archiport temporary reboot command hack
+	mount -o remount,rw -t ext4 $SYSTEM_DEVICE /system
+	/sbin/busybox rm /system/bin/reboot
+	/sbin/busybox ln -s /sbin/toolbox /system/bin/reboot
+	mount -o remount,ro -t ext4 $SYSTEM_DEVICE /system
+	echo $(date) Archiport reboot hack installed >> $BOEFFLA_LOGFILE
+
 # Finished
 	echo $(date) Boeffla-Kernel initialisation completed >> $BOEFFLA_LOGFILE
