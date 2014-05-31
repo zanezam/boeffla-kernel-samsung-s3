@@ -12,7 +12,8 @@
 KERNEL_SPECS="i9300;samsung;jb44;http://boeffla.df-kunde.de/sgs3/boeffla-kernel/"
 
 # kernel features 
-# (1=enable-busybox,2=enable-frandom,3=wipe-cache)
+# (1=enable-busybox,2=enable-frandom,3=wipe-cache,4=disable-zram-control)
+# (5=enable-default-zram-control)
 KERNEL_FEATURES="-1-2-3-"
 
 # path to kernel libraries
