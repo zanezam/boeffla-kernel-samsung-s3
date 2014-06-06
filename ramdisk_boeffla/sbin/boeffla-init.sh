@@ -4,8 +4,8 @@
 # *********************************************************
 
 # Kernel type
-	# KERNEL="SAM1"		# Samsung old bootanimation concept
-	KERNEL="SAM2"		# Samsung new bootanimation concept
+	# KERNEL="SAM1"		# Samsung old bootanimation / zRam concept
+	KERNEL="SAM2"		# Samsung new bootanimation / zRam concept
 	# KERNEL="CM"		# Cyanogenmod+Omni
 
 # path to internal sd memory
@@ -189,6 +189,13 @@ FRANDOM_ENABLER="/data/.boeffla/enable-frandom"
 # Play sound for Boeffla-Sound compatibility
 	echo $(date) Initialize sound system... >> $BOEFFLA_LOGFILE
 	/sbin/tinyplay /res/misc/silence.wav -D 0 -d 0 -p 880
+
+# Disable Samsung standard zRam implementation if new concept Samsung kernel
+	if [ "SAM2" == "$KERNEL" ]; then
+		busybox swapoff /dev/block/zram0
+		echo "1" > /sys/block/zram0/reset
+		echo "0" > /sys/block/zram0/disksize
+	fi
 
 # Interaction with Boeffla-Config app V2
 	# save original stock values for selected parameters
