@@ -4,8 +4,8 @@
 # *********************************************************
 
 # Kernel type
-	# KERNEL="SAM1"		# Samsung old bootanimation concept
-	KERNEL="SAM2"		# Samsung new bootanimation concept
+	# KERNEL="SAM1"		# Samsung old bootanimation / zRam concept
+	KERNEL="SAM2"		# Samsung new bootanimation / zRam concept
 	# KERNEL="CM"		# Cyanogenmod+Omni
 
 # path to internal sd memory
