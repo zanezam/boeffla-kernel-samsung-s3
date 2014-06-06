@@ -190,6 +190,13 @@ FRANDOM_ENABLER="/data/.boeffla/enable-frandom"
 	echo $(date) Initialize sound system... >> $BOEFFLA_LOGFILE
 	/sbin/tinyplay /res/misc/silence.wav -D 0 -d 0 -p 880
 
+# Disable Samsung standard zRam implementation if new concept Samsung kernel
+	if [ "SAM2" == "$KERNEL" ]; then
+		busybox swapoff /dev/block/zram0
+		echo "1" > /sys/block/zram0/reset
+		echo "0" > /sys/block/zram0/disksize
+	fi
+
 # Interaction with Boeffla-Config app V2
 	# save original stock values for selected parameters
 	cat /sys/devices/system/cpu/cpu0/cpufreq/UV_mV_table > /dev/bk_orig_cpu_voltage
