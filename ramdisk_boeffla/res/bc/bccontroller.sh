@@ -84,7 +84,7 @@ if [ "lov_presets" == "$1" ]; then
 	echo "Power~"
 	echo "Gov: zzmoove / performance"
 	echo "^Sched: row / row"
-	echo "^CPU: 1500 / no uv"
+	echo "^CPU: 1400 / no uv"
 	echo "^GPU: 266-600 / no uv;"
 	
 	echo "Standard~"
@@ -125,7 +125,7 @@ if [ "conf_presets" == "$1" ]; then
 		# gov, gov prof, sched int, sched ext, cpu max, cpu uv, gpu freq, gpu uv
 		echo "zzmoove;zzmoove - performance;"
 		echo "row;row;"
-		echo "1500000;None;"
+		echo "1400000;None;"
 		echo "266/350/440/533/600;None"
 	fi
 	if [ "Standard" ==  "$2" ]; then
