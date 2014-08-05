@@ -1123,7 +1123,10 @@ fi
 
 if [ "apply_ums" == "$1" ]; then
 	if [ "1" == "$2" ]; then
-		umount -l /mnt/extSdCard/
+		busybox umount -l /mnt/extSdCard
+		busybox umount -l /storage/sdcard1
+		busybox umount -l /mnt/media_rw/sdcard1
+		busybox umount -l /mnt/secure/asec
 		/system/bin/setprop persist.sys.usb.config mass_storage,adb
 		echo /dev/block/vold/179:49 > /sys/devices/platform/s3c-usbgadget/gadget/lun0/file
 	fi
