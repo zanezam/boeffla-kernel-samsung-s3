@@ -1190,81 +1190,25 @@ if [ "action_debug_info_file" == "$1" ]; then
 	echo -e "\n============================================\n" >> $2
 
 	echo -e "\n**** boeffla_sound\n" >> $2
-	cat /sys/class/misc/boeffla_sound/boeffla_sound >> $2
-
-	echo -e "\n**** headphone_volume\n" >> $2
-	cat /sys/class/misc/boeffla_sound/headphone_volume >> $2
-
-	echo -e "\n**** speaker_volume\n" >> $2
-	cat /sys/class/misc/boeffla_sound/speaker_volume >> $2
-
-	echo -e "\n**** speaker_tuning\n" >> $2
-	cat /sys/class/misc/boeffla_sound/speaker_tuning >> $2
-
-	echo -e "\n**** privacy_mode\n" >> $2
-	cat /sys/class/misc/boeffla_sound/privacy_mode >> $2
-
-	echo -e "\n**** equalizer\n" >> $2
-	cat /sys/class/misc/boeffla_sound/eq >> $2
-
-	echo -e "\n**** eq_gains\n" >> $2
-	cat /sys/class/misc/boeffla_sound/eq_gains >> $2
-
-	echo -e "\n**** eq_gains_alt\n" >> $2
-	cat /sys/class/misc/boeffla_sound/eq_gains_alt >> $2
-
-	echo -e "\n**** eq_bands\n" >> $2
-	cat /sys/class/misc/boeffla_sound/eq_bands >> $2
-
-	echo -e "\n**** dac_direct\n" >> $2
-	cat /sys/class/misc/boeffla_sound/dac_direct >> $2
-
-	echo -e "\n**** dac_oversampling\n" >> $2
-	cat /sys/class/misc/boeffla_sound/dac_oversampling >> $2
-
-	echo -e "\n**** fll_tuning\n" >> $2
-	cat /sys/class/misc/boeffla_sound/fll_tuning >> $2
-
-	echo -e "\n**** stereo_expansion\n" >> $2
-	cat /sys/class/misc/boeffla_sound/stereo_expansion >> $2
-
-	echo -e "\n**** mono_downmix\n" >> $2
-	cat /sys/class/misc/boeffla_sound/mono_downmix >> $2
-
-	echo -e "\n**** mic_level_general\n" >> $2
-	cat /sys/class/misc/boeffla_sound/mic_level_general >> $2
-
-	echo -e "\n**** mic_level_call\n" >> $2
-	cat /sys/class/misc/boeffla_sound/mic_level_call >> $2
-
-	echo -e "\n**** debug_level\n" >> $2
-	cat /sys/class/misc/boeffla_sound/debug_level >> $2
-
-	echo -e "\n**** debug_info\n" >> $2
-	cat /sys/class/misc/boeffla_sound/debug_info >> $2
-
-	echo -e "\n**** version\n" >> $2
-	cat /sys/class/misc/boeffla_sound/version >> $2
+	cd /sys/class/misc/boeffla_sound
+	busybox find * -print -maxdepth 0 -type f -exec tail -v -n +1 {} + >> $2
 
 	echo "\n============================================\n" >> $2
 
 	echo -e "\n**** Loaded modules:\n" >> $2
 	lsmod >> $2
 
-	echo -e "\n**** Max CPU frequency:\n" >> $2
-	cat /sys/devices/system/cpu/cpu0/cpufreq/scaling_max_freq >> $2
+	echo -e "\n**** CPU information:\n" >> $2
+	cd /sys/devices/system/cpu/cpu0/cpufreq
+	busybox find * -print -maxdepth 0 -type f -exec tail -v -n +1 {} + >> $2
 
-	echo -e "\n**** CPU undervolting:\n" >> $2
-	cat /sys/devices/system/cpu/cpu0/cpufreq/UV_mV_table >> $2
+	echo -e "\n**** GPU information:\n" >> $2
 
-	echo -e "\n**** GPU frequencies:\n" >> $2
-	cat /sys/class/misc/gpu_clock_control/gpu_control >> $2
+	cd /sys/class/misc/gpu_voltage_control
+	busybox find * -print -maxdepth 0 -type f -exec tail -v -n +1 {} + >> $2
 
-	echo -e "\n**** GPU undervolting:\n" >> $2
-	cat /sys/class/misc/gpu_voltage_control/gpu_control >> $2
-
-	echo -e "\n**** ASV level:\n" >> $2
-	cat /sys/devices/system/cpu/cpu0/cpufreq/asv_level >> $2
+	cd /sys/class/misc/gpu_clock_control
+	busybox find * -print -maxdepth 0 -type f -exec tail -v -n +1 {} + >> $2
 
 	echo -e "\n**** Root:\n" >> $2
 	ls /system/xbin/su >> $2
@@ -1294,27 +1238,20 @@ if [ "action_debug_info_file" == "$1" ]; then
 	cat /dev/bk_system_tweaks >> $2
 	cat /dev/bk_swappiness_overwrite >> $2
 
-	echo -e "\n**** Touch boost switch:\n" >> $2
-	cat /sys/class/misc/touchboost_switch/touchboost_switch >> $2
-
-	echo -e "\n**** Touch boost frequency:\n" >> $2
-	cat /sys/class/misc/touchboost_switch/touchboost_freq >> $2
+	echo -e "\n**** Touch boost:\n" >> $2
+	cd /sys/class/misc/touchboost_switch
+	busybox find * -print -maxdepth 0 -type f -exec tail -v -n +1 {} + >> $2
 
 	echo -e "\n**** Touch wake:\n" >> $2
-	cat /sys/class/misc/touchwake/enabled >> $2
-	cat /sys/class/misc/touchwake/delay >> $2
+	cd /sys/class/misc/touchwake
+	busybox find * -print -maxdepth 0 -type f -exec tail -v -n +1 {} + >> $2
 
 	echo -e "\n**** Early suspend:\n" >> $2
 	cat /sys/kernel/early_suspend/early_suspend_delay >> $2
 
-	echo -e "\n**** Charging levels (ac/usb/wireless):\n" >> $2
-	cat /sys/kernel/charge_levels/charge_level_ac >> $2
-	cat /sys/kernel/charge_levels/charge_level_usb >> $2
-	cat /sys/kernel/charge_levels/charge_level_wireless >> $2
-
-	echo -e "\n**** Charging instable power / ignore safety margin:\n" >> $2
-	cat /sys/kernel/charge_levels/ignore_unstable_power >> $2
-	cat /sys/kernel/charge_levels/ignore_safety_margin >> $2
+	echo -e "\n**** Charging levels (ac/usb/wireless) and Charging instable power / ignore safety margin:\n" >> $2
+	cd /sys/kernel/charge_levels
+	busybox find * -print -maxdepth 0 -type f -exec tail -v -n +1 {} + >> $2
 
 	echo -e "\n**** Governor:\n" >> $2
 	cat /sys/devices/system/cpu/cpu0/cpufreq/scaling_governor >> $2
@@ -1332,35 +1269,12 @@ if [ "action_debug_info_file" == "$1" ]; then
 	echo -e "\n**** Sharpness fix:\n" >> $2
 	cat /sys/class/misc/mdnie_preset/mdnie_preset >> $2
 
-	echo -e "\n**** LED fading:\n" >> $2
-	cat /sys/class/sec/led/led_fade >> $2
+	echo -e "\n**** LED information:\n" >> $2
+	cd /sys/class/sec/led
+	busybox find * -print -maxdepth 0 -type f -exec tail -v -n +1 {} + >> $2
 
-	echo -e "\n**** LED intensity:\n" >> $2
-	cat /sys/class/sec/led/led_intensity >> $2
-
-	echo -e "\n**** LED speed:\n" >> $2
-	cat /sys/class/sec/led/led_speed >> $2
-
-	echo -e "\n**** LED slope:\n" >> $2
-	cat /sys/class/sec/led/led_slope >> $2
-
-	echo -e "\n**** zRam disk size:\n" >> $2
-	cat /sys/block/zram0/disksize >> $2
-	cat /sys/block/zram1/disksize >> $2
-	cat /sys/block/zram2/disksize >> $2
-	cat /sys/block/zram3/disksize >> $2
-
-	echo -e "\n**** zRam compressed data size:\n" >> $2
-	cat /sys/block/zram0/compr_data_size >> $2
-	cat /sys/block/zram1/compr_data_size >> $2
-	cat /sys/block/zram2/compr_data_size >> $2
-	cat /sys/block/zram3/compr_data_size >> $2
-
-	echo -e "\n**** zRam original data size:\n" >> $2
-	cat /sys/block/zram0/orig_data_size >> $2
-	cat /sys/block/zram1/orig_data_size >> $2
-	cat /sys/block/zram2/orig_data_size >> $2
-	cat /sys/block/zram3/orig_data_size >> $2
+	echo -e "\n**** zRam information:\n" >> $2
+	busybox find /sys/block/zram*/* -print -maxdepth 0 -type f -exec tail -v -n +1 {} + >> $2
 
 	echo -e "\n**** Uptime:\n" >> $2
 	cat /proc/uptime >> $2
@@ -1390,8 +1304,9 @@ if [ "action_debug_info_file" == "$1" ]; then
 	mount >> $2
 
 	echo -e "\n**** Governor tuneables\n" >> $2
-	ls /sys/devices/system/cpu/cpufreq/*/* >> $2
-	cat /sys/devices/system/cpu/cpufreq/*/* >> $2
+	GOVERNOR=`cat /sys/devices/system/cpu/cpu0/cpufreq/scaling_governor`
+	cd /sys/devices/system/cpu/cpufreq/$GOVERNOR
+	busybox find * -print -maxdepth 0 -type f -exec tail -v -n +1 {} + >> $2
 
 	echo -e "\n============================================\n" >> $2
 
