@@ -92,6 +92,7 @@ FRANDOM_ENABLER="/data/.boeffla/enable-frandom"
 		echo $(date) "Mount/umount/top applet symlinks installed to /system/xbin" >> $BOEFFLA_LOGFILE
 	
 	fi
+	/sbin/busybox sync
 	mount -o remount,ro -t ext4 $SYSTEM_DEVICE /system
 		
 # Correct /sbin and /res directory and file permissions
@@ -147,11 +148,11 @@ FRANDOM_ENABLER="/data/.boeffla/enable-frandom"
 	echo $(date) Applying Boeffla-Kernel default settings >> $BOEFFLA_LOGFILE
 
 	# Ext4 tweaks default to on
-	sync
+	/sbin/busybox sync
 	mount -o remount,commit=20,noatime $CACHE_DEVICE /cache
-	sync
+	/sbin/busybox sync
 	mount -o remount,commit=20,noatime $DATA_DEVICE /data
-	sync
+	/sbin/busybox sync
 	echo $(date) Ext4 tweaks applied >> $BOEFFLA_LOGFILE
 
 	# Sdcard buffer tweaks default to 256 kb
@@ -261,6 +262,8 @@ FRANDOM_ENABLER="/data/.boeffla/enable-frandom"
 
 		/system/bin/sh /system/etc/install-recovery.sh
 
+		/sbin/busybox sync
+		
 		mount -o remount,ro -t ext4 $SYSTEM_DEVICE /system
 		echo $(date) Auto root: su installed >> $BOEFFLA_LOGFILE
 
