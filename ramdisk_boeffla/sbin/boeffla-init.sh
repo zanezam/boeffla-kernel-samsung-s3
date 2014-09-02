@@ -223,6 +223,7 @@
 		# busybox swapon -p 2 /dev/block/zram3
 		# busybox sleep 0.5s
 		# busybox sync
+		# echo "80" > /proc/sys/vm/swappiness
 		# echo $(date) Boeffla default zRam activated >> $BOEFFLA_LOGFILE
 
 		echo $(date) Boeffla-Kernel default settings part 2 applied >> $BOEFFLA_LOGFILE
