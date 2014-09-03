@@ -157,10 +157,10 @@
 	/sbin/tinyplay /res/misc/silence.wav -D 0 -d 0 -p 880
 
 # Deactivate Samsung standard zRam implementation, if any
-	# busybox swapoff /dev/block/zram0
-	# echo "1" > /sys/block/zram0/reset
-	# echo "0" > /sys/block/zram0/disksize
-	# echo $(date) Samsung standard zRam deactivated >> $BOEFFLA_LOGFILE
+	busybox swapoff /dev/block/zram0
+	echo "1" > /sys/block/zram0/reset
+	echo "0" > /sys/block/zram0/disksize
+	echo $(date) Samsung standard zRam deactivated >> $BOEFFLA_LOGFILE
 
 # Apply Boeffla-Kernel default settings part 1 (the ones needed for config app baselining)
 
