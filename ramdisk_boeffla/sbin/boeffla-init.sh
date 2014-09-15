@@ -125,6 +125,24 @@
 	echo "200000" > /sys/class/misc/boeffla_sound/change_delay
 	echo $(date) Boeffla-Sound change delay set to 200 ms >> $BOEFFLA_LOGFILE
 
+# Apply Boeffla-Kernel default settings
+
+	# Set AC charging rate default
+	echo "1100" > /sys/kernel/charge_levels/charge_level_ac
+
+	# Ext4 tweaks default to on
+	/sbin/busybox sync
+	mount -o remount,commit=20,noatime $CACHE_DEVICE /cache
+	/sbin/busybox sync
+	mount -o remount,commit=20,noatime $DATA_DEVICE /data
+	/sbin/busybox sync
+
+	# Sdcard buffer tweaks default to 256 kb
+	echo 256 > /sys/block/mmcblk0/bdi/read_ahead_kb
+	echo 256 > /sys/block/mmcblk1/bdi/read_ahead_kb
+
+	echo $(date) Boeffla-Kernel default settings applied >> $BOEFFLA_LOGFILE
+
 # init.d support (enabler only to be considered for CM based roms)
 # (zipalign scripts will not be executed as only exception)
 	#if [ -f $INITD_ENABLER ] ; then
@@ -162,13 +180,6 @@
 	echo "0" > /sys/block/zram0/disksize
 	echo $(date) Samsung standard zRam deactivated >> $BOEFFLA_LOGFILE
 
-# Apply Boeffla-Kernel default settings part 1 (the ones needed for config app baselining)
-
-	# Set AC charging rate default
-	echo "1100" > /sys/kernel/charge_levels/charge_level_ac
-
-	echo $(date) Boeffla-Kernel default settings part 1 applied >> $BOEFFLA_LOGFILE
-
 # Interaction with Boeffla-Config app V2
 	# save original stock values for selected parameters
 	cat /sys/devices/system/cpu/cpu0/cpufreq/UV_mV_table > /dev/bk_orig_cpu_voltage
@@ -187,19 +198,9 @@
 		. $BOEFFLA_STARTCONFIG
 		echo $(date) Startup configuration applied  >> $BOEFFLA_LOGFILE
 	else
-		# If not, apply Boeffla-Kernel default settings part 2
-		
-		# Ext4 tweaks default to on
-		/sbin/busybox sync
-		mount -o remount,commit=20,noatime $CACHE_DEVICE /cache
-		/sbin/busybox sync
-		mount -o remount,commit=20,noatime $DATA_DEVICE /data
-		/sbin/busybox sync
+		echo $(date) "No startup configuration found"  >> $BOEFFLA_LOGFILE
 
-		# Sdcard buffer tweaks default to 256 kb
-		echo 256 > /sys/block/mmcblk0/bdi/read_ahead_kb
-		echo 256 > /sys/block/mmcblk1/bdi/read_ahead_kb
-
+		# If not, apply default Boeffla-Kernel zRam
 		# Enable total 1 GB zRam on 4 devices as default
 		# busybox swapoff /dev/block/zram0
 		# busybox swapoff /dev/block/zram1
@@ -225,8 +226,6 @@
 		# busybox sync
 		# echo "80" > /proc/sys/vm/swappiness
 		# echo $(date) Boeffla default zRam activated >> $BOEFFLA_LOGFILE
-
-		echo $(date) Boeffla-Kernel default settings part 2 applied >> $BOEFFLA_LOGFILE
 	fi
 	
 # Turn off debugging for certain modules
