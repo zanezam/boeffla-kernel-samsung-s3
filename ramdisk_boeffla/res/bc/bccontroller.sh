@@ -1391,6 +1391,7 @@ if [ "action_clean_initd" == "$1" ]; then
 	busybox tar cvz -f $2 /system/etc/init.d
 	mount -o remount,rw -t ext4 $SYSTEM_DEVICE /system
 	busybox rm /system/etc/init.d/*
+	busybox sync
 	mount -o remount,ro -t ext4 $SYSTEM_DEVICE /system
 	exit 0
 fi
@@ -1445,6 +1446,7 @@ if [ "archive_kernel" == "$1" ]; then
 	busybox mv $3.tar $3.tar.md5
 	busybox chmod 666 $3.tar.md5
 	busybox rm $2
+	busybox sync
 	exit 0
 fi
 
@@ -1479,6 +1481,7 @@ if [ "flash_cm_kernel" == "$1" ]; then
 	busybox rm -f /system/lib/modules/*
 	busybox cp $2/system/lib/modules/* /system/lib/modules
 	busybox chmod 644 /system/lib/modules/*
+	busybox sync
 	mount -o remount,ro -t ext4 $SYSTEM_DEVICE /system
 	exit 0
 fi
