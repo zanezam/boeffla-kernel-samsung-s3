@@ -1,7 +1,7 @@
 # Boeffla-Config controller interface
 #
 # *****************************
-# i9300 Samsung 4.4.2 version
+# i9300 Samsung 4.4.4 version
 #
 # V0.1
 # *****************************
@@ -11,7 +11,7 @@
 # ********************************
 
 # kernel specification (hardware; type; target; url)
-KERNEL_SPECS="i9300;samsung;jb44;http://boeffla.df-kunde.de/sgs3/boeffla-kernel/"
+KERNEL_SPECS="i9300;samsung;kk444;http://boeffla.df-kunde.de/sgs3/boeffla-kernel/"
 
 # kernel features 
 # (1=enable-busybox,2=enable-frandom,3=wipe-cache,4=disable-zram-control)

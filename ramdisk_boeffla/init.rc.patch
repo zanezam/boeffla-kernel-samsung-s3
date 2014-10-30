@@ -1,17 +1,17 @@
-From 686e04b1e7d1d423eb48facea4698fbf1562b0e1 Mon Sep 17 00:00:00 2001
+From b1f30dac48a53832f677e4f0050809a5debe8cd8 Mon Sep 17 00:00:00 2001
 From: andip71 <andreasp@gmx.de>
-Date: Tue, 27 May 2014 09:41:35 +0200
-Subject: [PATCH] b
+Date: Thu, 30 Oct 2014 16:14:47 +0100
+Subject: [PATCH] 2
 
 ---
- init.rc | 25 +++++++++++++++++++------
- 1 file changed, 19 insertions(+), 6 deletions(-)
+ init.rc | 29 ++++++++++++++++++++++-------
+ 1 file changed, 22 insertions(+), 7 deletions(-)
 
 diff --git a/init.rc b/init.rc
-index 1f17e2e..de747cf 100755
+index 5932bc9..94eceb5 100755
 --- a/init.rc
 +++ b/init.rc
-@@ -60,6 +60,9 @@ loglevel 3
+@@ -59,6 +59,9 @@ on init
      mkdir /mnt/shell 0750 shell shell
      mkdir /mnt/media_rw 0700 media_rw media_rw
      mkdir /storage 0751 root sdcard_r
@@ -21,7 +21,7 @@ index 1f17e2e..de747cf 100755
          
      # Directory for putting things only root should see.
      mkdir /mnt/secure 0700 root root
-@@ -136,6 +139,10 @@ loglevel 3
+@@ -135,6 +138,10 @@ on init
  # This is needed by any process that uses socket tagging.
      chmod 0644 /dev/xt_qtaguid
  
@@ -32,7 +32,7 @@ index 1f17e2e..de747cf 100755
  on fs
  # mount mtd partitions
      # Mount /system rw first to give the filesystem a chance to save a checkpoint
-@@ -727,12 +734,12 @@ service powersnd /system/bin/samsungpowersoundplay
+@@ -770,12 +777,12 @@ service powersnd /system/bin/samsungpowersoundplay
       disabled
       oneshot
  
@@ -51,16 +51,21 @@ index 1f17e2e..de747cf 100755
  
  service installd /system/bin/installd
      class main
-@@ -822,3 +829,9 @@ service drsd /system/bin/drsd
+@@ -889,4 +896,12 @@ service pppoe /system/bin/pppoewrapper
      class main
-     socket drsd stream 600 system system
- 
+     disabled
+     oneshot
+-# PPPOE SUPPORT
+\ No newline at end of file
++# PPPOE SUPPORT
 +# Call Boeffla-Kernel init script
++
 +service boeffla-init /sbin/boeffla-init.sh
 +    class main
 +    user root
 +    group root
 +    oneshot
++    
 -- 
-1.8.1.2
+1.9.1
 
