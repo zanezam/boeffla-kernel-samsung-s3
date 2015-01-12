@@ -1020,7 +1020,7 @@ static int fg_read_repcap(struct i2c_client *client)
 	return ret;
 }
 
-static int fg_read_current(struct i2c_client *client, int unit)
+static int fg_read_current(struct i2c_client *client)
 {
 	struct sec_fuelgauge_info *fuelgauge = i2c_get_clientdata(client);
 	u8 data1[2], data2[2];
@@ -1048,14 +1048,7 @@ static int fg_read_current(struct i2c_client *client, int unit)
 		sign = POSITIVE;
 
 	/* 1.5625uV/0.01Ohm(Rsense) = 156.25uA */
-	switch (unit) {
-	case SEC_BATTEY_CURRENT_UA:
-		i_current = temp * 15625 / 100;
-		break;
-	case SEC_BATTEY_CURRENT_MA:
-	default:
-		i_current = temp * 15625 / 100000;
-	}
+	i_current = temp * 15625 / 100000;
 	if (sign)
 		i_current *= -1;
 
@@ -1083,7 +1076,7 @@ static int fg_read_current(struct i2c_client *client, int unit)
 	return i_current;
 }
 
-static int fg_read_avg_current(struct i2c_client *client, int unit)
+static int fg_read_avg_current(struct i2c_client *client)
 {
 	u8  data2[2];
 	u32 temp, sign;
@@ -1103,14 +1096,7 @@ static int fg_read_avg_current(struct i2c_client *client, int unit)
 		sign = POSITIVE;
 
 	/* 1.5625uV/0.01Ohm(Rsense) = 156.25uA */
-	switch (unit) {
-	case SEC_BATTEY_CURRENT_UA:
-		avg_current = temp * 15625 / 100;
-		break;
-	case SEC_BATTEY_CURRENT_MA:
-	default:
-		avg_current = temp * 15625 / 100000;
-	}
+	avg_current = temp * 15625 / 100000;
 
 	if (sign)
 		avg_current *= -1;
@@ -1133,8 +1119,8 @@ int fg_reset_soc(struct i2c_client *client)
 		fg_read_vfsoc(client), fg_read_soc(client));
 	dev_info(&client->dev,
 		"%s: Before quick-start - current(%d), avg current(%d)\n",
-		__func__, fg_read_current(client, SEC_BATTEY_CURRENT_MA),
-		fg_read_avg_current(client, SEC_BATTEY_CURRENT_MA));
+		__func__, fg_read_current(client),
+		fg_read_avg_current(client));
 
 	if (!fuelgauge->pdata->check_jig_status()) {
 		dev_info(&client->dev,
@@ -1167,8 +1153,8 @@ int fg_reset_soc(struct i2c_client *client)
 		fg_read_vfsoc(client), fg_read_soc(client));
 	dev_info(&client->dev,
 		"%s: After quick-start - current(%d), avg current(%d)\n",
-		__func__, fg_read_current(client, SEC_BATTEY_CURRENT_MA),
-		fg_read_avg_current(client, SEC_BATTEY_CURRENT_MA));
+		__func__, fg_read_current(client),
+		fg_read_avg_current(client));
 	fg_write_register(client, CYCLES_REG, 0x00a0);
 
 /* P8 is not turned off by Quickstart @3.4V
@@ -1350,11 +1336,11 @@ int get_fuelgauge_value(struct i2c_client *client, int data)
 		break;
 
 	case FG_CURRENT:
-		ret = fg_read_current(client, SEC_BATTEY_CURRENT_MA);
+		ret = fg_read_current(client);
 		break;
 
 	case FG_CURRENT_AVG:
-		ret = fg_read_avg_current(client, SEC_BATTEY_CURRENT_MA);
+		ret = fg_read_avg_current(client);
 		break;
 
 	case FG_CHECK_STATUS:
@@ -1811,8 +1797,7 @@ int low_batt_compensation(struct i2c_client *client,
 
 	/* Not charging, Under low battery comp voltage */
 	if (fg_vcell <= get_battery_data(fuelgauge).low_battery_comp_voltage) {
-		fg_avg_current = fg_read_avg_current(client,
-			SEC_BATTEY_CURRENT_MA);
+		fg_avg_current = fg_read_avg_current(client);
 		fg_min_current = min(fg_avg_current, fg_current);
 
 		table_size =
@@ -2235,33 +2220,13 @@ bool sec_hal_fg_get_property(struct i2c_client *client,
 			break;
 		}
 		break;
-	/* Current */
+		/* Current (mA) */
 	case POWER_SUPPLY_PROP_CURRENT_NOW:
-		switch (val->intval) {
-		case SEC_BATTEY_CURRENT_UA:
-			val->intval =
-				fg_read_current(client, SEC_BATTEY_CURRENT_UA);
-			break;
-		case SEC_BATTEY_CURRENT_MA:
-		default:
-			val->intval = get_fuelgauge_value(client, FG_CURRENT);
-			break;
-		}
+		val->intval = get_fuelgauge_value(client, FG_CURRENT);
 		break;
-		/* Average Current */
+		/* Average Current (mA) */
 	case POWER_SUPPLY_PROP_CURRENT_AVG:
-		switch (val->intval) {
-		case SEC_BATTEY_CURRENT_UA:
-			val->intval =
-				fg_read_avg_current(client,
-				SEC_BATTEY_CURRENT_UA);
-			break;
-		case SEC_BATTEY_CURRENT_MA:
-		default:
-			val->intval =
-				get_fuelgauge_value(client, FG_CURRENT_AVG);
-			break;
-		}
+		val->intval = get_fuelgauge_value(client, FG_CURRENT_AVG);
 		break;
 		/* Full Capacity */
 	case POWER_SUPPLY_PROP_ENERGY_NOW:

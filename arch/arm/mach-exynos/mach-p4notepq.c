@@ -1317,14 +1317,8 @@ static void  sec_charger_cb(int set_cable_type, int cable_sub_type)
 #endif
 
 /* Send charger state to USB. USB needs cable type what USB data or not */
-#if defined(CONFIG_MACH_P4NOTELTE_USA_VZW)
-	if (gadget) {
-#else
 	usb_path = usb_switch_get_path();
 	if (gadget && (usb_path != USB_PATH_CP)) {
-#endif
-
-
 		if (cable_state_to_usb)
 			usb_gadget_vbus_connect(gadget);
 		else

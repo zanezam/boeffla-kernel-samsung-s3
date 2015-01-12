@@ -1553,8 +1553,6 @@ static struct device_attribute sec_battery_attrs[] = {
 	SEC_BATTERY_ATTR(batt_current_now),
 	SEC_BATTERY_ATTR(siop_activated),
 	SEC_BATTERY_ATTR(batt_read_raw_soc),
-	SEC_BATTERY_ATTR(batt_current_ua_now),
-	SEC_BATTERY_ATTR(batt_current_ua_avg),
 #ifdef CONFIG_SAMSUNG_LPM_MODE
 	SEC_BATTERY_ATTR(batt_lp_charging),
 	SEC_BATTERY_ATTR(voltage_now),
@@ -1602,8 +1600,6 @@ enum {
 	BATT_CURRENT_NOW,
 	SIOP_ACTIVATED,
 	BATT_READ_RAW_SOC,
-	BATT_CURRENT_UA_NOW,
-	BATT_CURRENT_UA_AVG,
 #ifdef CONFIG_SAMSUNG_LPM_MODE
 	BATT_LP_CHARGING,
 	VOLTAGE_NOW,
@@ -1721,14 +1717,6 @@ static ssize_t sec_bat_show_property(struct device *dev,
 	case BATT_READ_RAW_SOC:
 		i += scnprintf(buf + i, PAGE_SIZE - i, "%d\n",
 		get_fuelgauge_value(FG_RAW_LEVEL));
-		break;
-	case BATT_CURRENT_UA_NOW:
-		i += scnprintf(buf + i, PAGE_SIZE - i, "%d\n",
-		get_fuelgauge_value(FG_CURRENT)*1000);
-		break;
-	case BATT_CURRENT_UA_AVG:
-		i += scnprintf(buf + i, PAGE_SIZE - i, "%d\n",
-		get_fuelgauge_value(FG_CURRENT_AVG)*1000);
 		break;
 #ifdef CONFIG_SAMSUNG_LPM_MODE
 	case BATT_LP_CHARGING:
@@ -2273,34 +2261,11 @@ static void sec_cable_check_status(struct battery_data *battery)
 		cancel_delayed_work(&battery->fuelgauge_recovery_work);
 		battery->is_low_batt_alarm = false;
 
-		if(lpcharge)
-		{
-			if (battery->info.batt_health != POWER_SUPPLY_HEALTH_GOOD) {
-    			pr_info("Unhealth battery state! ");
-    			if(battery->current_cable_status == CHARGER_USB)
-				{
-					status = CHARGER_USB;
-				}
-				else if ( battery->current_cable_status == CHARGER_AC)
-				{
-					status = CHARGER_AC;
-				}
-				else
-				{
-					status = CHARGER_DISCHARGE;
-				}
-				sec_set_chg_en(battery, 0);
-    			
-				goto __end__;
-			}
-		}
-		else {
-			if (battery->info.batt_health != POWER_SUPPLY_HEALTH_GOOD) {
-				pr_info("Unhealth battery state! ");
-				status = CHARGER_DISCHARGE;
-				sec_set_chg_en(battery, 0);
-				goto __end__;
-			}
+		if (battery->info.batt_health != POWER_SUPPLY_HEALTH_GOOD) {
+			pr_info("Unhealth battery state! ");
+			status = CHARGER_DISCHARGE;
+			sec_set_chg_en(battery, 0);
+			goto __end__;
 		}
 
 		status = battery->current_cable_status;

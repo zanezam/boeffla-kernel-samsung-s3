@@ -2448,11 +2448,6 @@ unsigned long try_to_free_pages(struct zonelist *zonelist, int order,
 //#else
 		.may_swap = 1,
 //#endif /* CONFIG_ZRAM_FOR_ANDROID */
-#ifdef CONFIG_ZSWAP
-		.swappiness = vm_swappiness / 2,
-#else
-		.swappiness = vm_swappiness,
-#endif
 		.order = order,
 		.mem_cgroup = NULL,
 		.nodemask = nodemask,
