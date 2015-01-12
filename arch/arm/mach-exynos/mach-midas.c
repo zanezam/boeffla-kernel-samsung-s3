@@ -2519,10 +2519,10 @@ static struct samsung_battery_platform_data samsung_battery_pdata = {
 	.freeze_recovery_temp = 30,
 #elif defined(CONFIG_MACH_T0_KOR_SKT) || defined(CONFIG_MACH_T0_KOR_KT) || \
 	defined(CONFIG_MACH_T0_KOR_LGT)
-	.overheat_stop_temp = 600,
-	.overheat_recovery_temp = 400,
-	.freeze_stop_temp = -50,
-	.freeze_recovery_temp = 0,
+	.overheat_stop_temp = 660,
+	.overheat_recovery_temp = 425,
+	.freeze_stop_temp = -45,
+	.freeze_recovery_temp = 3,
 #elif defined(CONFIG_MACH_BAFFIN_KOR_SKT) || \
 	defined(CONFIG_MACH_BAFFIN_KOR_KT)
 	.overheat_stop_temp = 620,

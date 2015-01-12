@@ -1,7 +1,7 @@
 /*
  * BCMSDH Function Driver for the native SDIO/MMC driver in the Linux Kernel
  *
- * Copyright (C) 1999-2014, Broadcom Corporation
+ * Copyright (C) 1999-2013, Broadcom Corporation
  * 
  *      Unless you and Broadcom execute a separate written software license
  * agreement governing use of this software, this software is licensed to you
@@ -21,7 +21,7 @@
  * software in any way with any other Broadcom software provided under a license
  * other than the GPL, without Broadcom's express prior written consent.
  *
- * $Id: bcmsdh_sdmmc.c 457662 2014-02-24 15:07:28Z $
+ * $Id: bcmsdh_sdmmc.c 436745 2013-11-15 03:11:23Z $
  */
 #include <typedefs.h>
 
@@ -171,7 +171,7 @@ sdioh_attach(osl_t *osh, struct sdio_func *func)
 	err_ret = sdio_set_block_size(sd->func[1], 64);
 	sdio_release_host(sd->func[1]);
 	if (err_ret) {
-		sd_err(("bcmsdh_sdmmc: Failed to set F1 blocksize(%d)\n", err_ret));
+		sd_err(("bcmsdh_sdmmc: Failed to set F1 blocksize\n"));
 		goto fail;
 	}
 
@@ -180,8 +180,7 @@ sdioh_attach(osl_t *osh, struct sdio_func *func)
 	err_ret = sdio_set_block_size(sd->func[2], sd_f2_blocksize);
 	sdio_release_host(sd->func[2]);
 	if (err_ret) {
-		sd_err(("bcmsdh_sdmmc: Failed to set F2 blocksize to %d(%d)\n",
-			sd_f2_blocksize, err_ret));
+		sd_err(("bcmsdh_sdmmc: Failed to set F2 blocksize to %d\n", sd_f2_blocksize));
 		goto fail;
 	}
 
@@ -531,8 +530,8 @@ sdioh_iovar_op(sdioh_info_t *si, const char *name,
 		sdio_claim_host(si->func[func]);
 		bcmerror = sdio_set_block_size(si->func[func], blksize);
 		if (bcmerror)
-			sd_err(("%s: Failed to set F%d blocksize to %d(%d)\n",
-				__FUNCTION__, func, blksize, bcmerror));
+			sd_err(("%s: Failed to set F%d blocksize to %d\n",
+				__FUNCTION__, func, blksize));
 		sdio_release_host(si->func[func]);
 #endif /* CUSTOMER_HW4 && USE_DYNAMIC_F2_BLKSIZE */
 		break;
@@ -877,7 +876,7 @@ sdioh_request_byte(sdioh_info_t *sd, uint rw, uint func, uint regaddr, uint8 *by
 	}
 
 	if (err_ret) {
-		if ((regaddr == 0x1001F) && ((err_ret == -ETIMEDOUT) || (err_ret == -EILSEQ))) {
+		if ((regaddr == 0x1001F) && (err_ret == -110)) {
 		} else {
 			sd_err(("bcmsdh_sdmmc: Failed to %s byte F%d:@0x%05x=%02x, Err: %d\n",
 				rw ? "Write" : "Read", func, regaddr, *byte, err_ret));
@@ -1165,7 +1164,7 @@ sdioh_request_buffer(sdioh_info_t *sd, uint pio_dma, uint fix_inc, uint write, u
 	ASSERT(buffer);
 
 	/* buffer and length are aligned, use it directly so we can avoid memory copy */
-	if (((ulong)buffer & DMA_ALIGN_MASK) == 0 && (buf_len & DMA_ALIGN_MASK) == 0)
+	if (((uint)buffer & DMA_ALIGN_MASK) == 0 && (buf_len & DMA_ALIGN_MASK) == 0)
 		return sdioh_buffer_tofrom_bus(sd, fix_inc, write, func, addr, buffer, buf_len);
 
 	sd_err(("%s: [%d] doing memory copy buf=%p, len=%d\n",
@@ -1359,10 +1358,8 @@ sdioh_start(sdioh_info_t *sd, int stage)
 				sdio_claim_host(sd->func[1]);
 
 				sd->client_block_size[1] = 64;
-				ret = sdio_set_block_size(sd->func[1], 64);
-				if (ret) {
-					sd_err(("bcmsdh_sdmmc: Failed to set F1 "
-						"blocksize(%d)\n", ret));
+				if (sdio_set_block_size(sd->func[1], 64)) {
+					sd_err(("bcmsdh_sdmmc: Failed to set F1 blocksize\n"));
 				}
 
 				/* Release host controller F1 */
@@ -1374,10 +1371,10 @@ sdioh_start(sdioh_info_t *sd, int stage)
 				sdio_claim_host(sd->func[2]);
 
 				sd->client_block_size[2] = sd_f2_blocksize;
-				ret = sdio_set_block_size(sd->func[2], sd_f2_blocksize);
-				if (ret) {
+				if (sdio_set_block_size(sd->func[2],
+					sd_f2_blocksize)) {
 					sd_err(("bcmsdh_sdmmc: Failed to set F2 "
-						"blocksize to %d(%d)\n", sd_f2_blocksize, ret));
+						"blocksize to %d\n", sd_f2_blocksize));
 				}
 
 				/* Release host controller F2 */

@@ -99,7 +99,6 @@ struct driver_info {
 #define FLAG_AVOID_UNLINK_URBS	0x0100	/* don't unlink urbs at usbnet_stop() */
 #define FLAG_SEND_ZLP	0x0200		/* hw requires ZLPs are sent */
 #define FLAG_HW_IP_ALIGNMENT	0x0400	/* AX88772B support hardware IP alignment */
-#define FLAG_LINK_INTR	0x0800		/* updates link (carrier) status */
 
 
 	/* init device ... can sleep, or cause probe() failure */

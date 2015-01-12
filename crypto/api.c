@@ -34,8 +34,6 @@ EXPORT_SYMBOL_GPL(crypto_alg_sem);
 BLOCKING_NOTIFIER_HEAD(crypto_chain);
 EXPORT_SYMBOL_GPL(crypto_chain);
 
-static struct crypto_alg *crypto_larval_wait(struct crypto_alg *alg);
-
 static inline struct crypto_alg *crypto_alg_get(struct crypto_alg *alg)
 {
 	atomic_inc(&alg->cra_refcnt);
@@ -154,12 +152,9 @@ static struct crypto_alg *crypto_larval_add(const char *name, u32 type,
 	}
 	up_write(&crypto_alg_sem);
 
-	//patch from kernel 3.13.7 (refer to https://www.kernel.org/ & https://lkml.org/lkml/2013/9/7/139)
-	if (alg != &larval->alg) {
+	if (alg != &larval->alg)
 		kfree(larval);
-		if (crypto_is_larval(alg))
-			alg = crypto_larval_wait(alg);
-	}
+
 	return alg;
 }
 

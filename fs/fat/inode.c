@@ -721,7 +721,7 @@ retry:
 				  &raw_entry->adate, NULL);
 	}
 	spin_unlock(&sbi->inode_hash_lock);
-	mark_buffer_dirty_sync(bh);
+	mark_buffer_dirty(bh);
 	err = 0;
 	if (wait)
 		err = sync_dirty_buffer(bh);
