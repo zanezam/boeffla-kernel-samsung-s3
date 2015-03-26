@@ -1333,6 +1333,8 @@ config IPCAM_01_BD
 config GC2PD_00_BD
 	bool "Galaxy Camera 2 common Board"
 
+source "arch/arm/mach-exynos/Kconfig.slp"
+
 config WRITEBACK_ENABLED
 	bool "Samsung Writeback Enable"
 	help
