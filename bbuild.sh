@@ -13,7 +13,7 @@
 BOEFFLA_VERSION="5.8-Samsung-i9300"
 EXTENDED_CMDLINE=""
 
-TOOLCHAIN="/opt/toolchains/arm-linux-androideabi-4.7/prebuilt/linux-x86/bin/arm-linux-androideabi-"
+TOOLCHAIN="/opt/toolchains/arm-eabi-4.7/bin/arm-eabi-"
 
 COMPILE_DTB="n"
 MODULES_IN_SYSTEM="n"
