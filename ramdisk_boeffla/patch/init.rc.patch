@@ -56,7 +56,7 @@ index a5324b1..385ca01 100755
  	
 -	
 +# Call Boeffla-Kernel init script
-+service boeffla-init /sbin/boeffla-init.sh
++service boeffla-init /sbin/boeffla-init-starter.sh
 +    class main
 +    user root
 +    group root
