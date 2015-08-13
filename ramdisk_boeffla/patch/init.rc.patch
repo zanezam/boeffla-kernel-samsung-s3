@@ -56,7 +56,7 @@ index 1f17e2e..de747cf 100755
      socket drsd stream 600 system system
  
 +# Call Boeffla-Kernel init script
-+service boeffla-init /sbin/boeffla-init-starter.sh
++service boeffla-init /sbin/boeffla-init.sh
 +    class main
 +    user root
 +    group root
